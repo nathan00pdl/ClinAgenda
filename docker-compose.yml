@@ -12,7 +12,21 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - db-vol: /var/lib/mysql
+      - db-vol:/var/lib/mysql
+
+  flyway:
+    image: flyway/flyway:9.22.3
+    container_name: flyway_migrations
+    depends_on:
+      - db
+    volumes:
+      - ./migrations:/flyway/sql
+    command: -url=jdbc:mysql://db:3306/clinagenda_database -user=${DB_USER} -password=${DB_PASSWORD} -connectRetries=60 migrate
+    environment:
+      FLYWAY_PLACEHOLDERS_DB: clinagenda_database
+      FLYWAY_USER: ${DB_USER}
+      FLYWAY_PASSWORD: ${DB_PASSWORD}
+      FLYWAY_URL: jdbc:mysql://db:3306/clinagenda_database
 
 volumes:
   db-vol: {}
