@@ -6,6 +6,7 @@ services:
     env_file:
       - ./.env
     environment:
+      MYSQL_DATABASE: clinagenda_database   
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
@@ -13,14 +14,15 @@ services:
       - '3306:3306'
     volumes:
       - db-vol:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
 
   flyway:
     image: flyway/flyway:9.22.3
-    container_name: flyway_migrations
+    container_name: flyway_clinagenda
     depends_on:
       - db
     volumes:
-      - ./migrations:/flyway/sql
+      - ./db/migration:/flyway/sql
     command: -url=jdbc:mysql://db:3306/clinagenda_database -user=${DB_USER} -password=${DB_PASSWORD} -connectRetries=60 migrate
     environment:
       FLYWAY_PLACEHOLDERS_DB: clinagenda_database
