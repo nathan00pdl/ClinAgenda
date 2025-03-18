@@ -1,0 +1,18 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_clinagenda
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - '3306:3306'
+    volumes:
+      - db-vol: /var/lib/mysql
+
+volumes:
+  db-vol: {}
