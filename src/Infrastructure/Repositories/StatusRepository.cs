@@ -1,4 +1,7 @@
+using System.Text;
 using ClinAgenda.Application.DTOs;
+using MySql.Data.MySqlClient;
+using Dapper;
 using ClinAgenda.Core.Entities;
 using ClinAgenda.Core.Interfaces;
 
@@ -40,13 +43,13 @@ namespace ClinAgenda.Infrastructure.Repositories
 
             return rowsAffected;
         }
-        
+
         public async Task<int> InsertStatusAsync(StatusInsertDTO statusInsertDTO)
         {
             string query = @"
             INSERT INTO STATUS (NAME) 
             VALUES (@Name);
-            SELECT LAST_INSERT_ID();"; 
+            SELECT LAST_INSERT_ID();";
 
             return await _connection.ExecuteScalarAsync<int>(query, statusInsertDTO);
         }
