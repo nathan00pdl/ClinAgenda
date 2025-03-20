@@ -27,5 +27,25 @@ namespace ClinAgenda.WebAPI.Controllers
                 return StatusCode(500, $"Error When Fetching Status: {ex.Message}");
             }
         }
+
+        [HttpGet("ListById/{id}")]
+        public async Task<IActionResult> GetStatusByIdAsync(int id)
+        {
+            try
+            {
+                var specialty = await _statusUseCase.GetStatusByIdAsync(id);
+
+                if (specialty == null) 
+                {
+                    return NotFound($"Status with ID {id} not found.");
+                }
+
+                return Ok(specialty);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error When Fetching Status By ID: {ex.Message}");
+            }
+        }
     }
 }
