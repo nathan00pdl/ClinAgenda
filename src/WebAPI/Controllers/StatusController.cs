@@ -16,7 +16,7 @@ namespace ClinAgenda.WebAPI.Controllers
             _statusUseCase = service;
         }
 
-        [HttpGet("List")]
+        [HttpGet("list")]
         public async Task<IActionResult> GetStatusAsync([FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
         {
             try
@@ -30,7 +30,7 @@ namespace ClinAgenda.WebAPI.Controllers
             }
         }
 
-        [HttpGet("ListById/{id}")]
+        [HttpGet("listById/{id}")]
         public async Task<IActionResult> GetStatusByIdAsync(int id)
         {
             try
@@ -39,7 +39,7 @@ namespace ClinAgenda.WebAPI.Controllers
 
                 if (specialty == null)
                 {
-                    return NotFound($"Status with ID {id} not found.");
+                    return NotFound($"Status with ID {id} Not Found.");
                 }
 
                 return Ok(specialty);
