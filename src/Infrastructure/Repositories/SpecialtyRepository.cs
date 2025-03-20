@@ -12,20 +12,19 @@ namespace ClinAgenda.Infrastructure.Repositories
         {
             _connection = connection;
         }
-
         public async Task<SpecialtyDTO> GetByIdAsync(int id)
         {
-            string query = @"
-            SELECT ID, 
-                   NAME 
-            FROM STATUS
-            WHERE ID = @Id";
+            const string query = @"
+                SELECT 
+                    ID, 
+                    NAME,
+                    SCHEDULEDURATION 
+                FROM SPECIALTY
+                WHERE ID = @Id";
 
-            var parameters = new { Id = id };
+            var specialty = await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, new { Id = id });
 
-            var status = await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, parameters);
-
-            return status;
+            return specialty;
         }
     }
 }
