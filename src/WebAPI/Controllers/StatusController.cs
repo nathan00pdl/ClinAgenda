@@ -1,4 +1,6 @@
+using ClinAgenda.Application.DTOs;
 using ClinAgenda.Application.UseCases;
+using ClinAgenda.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinAgenda.WebAPI.Controllers
@@ -35,7 +37,7 @@ namespace ClinAgenda.WebAPI.Controllers
             {
                 var specialty = await _statusUseCase.GetStatusByIdAsync(id);
 
-                if (specialty == null) 
+                if (specialty == null)
                 {
                     return NotFound($"Status with ID {id} not found.");
                 }
@@ -45,6 +47,27 @@ namespace ClinAgenda.WebAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error When Fetching Status By ID: {ex.Message}");
+            }
+        }
+
+        [HttpPost("insert")]
+        public async Task<IActionResult> CreateStatusAsync([FromBody] StatusInsertDTO status)
+        {
+            try
+            {
+                if (status == null || string.IsNullOrWhiteSpace(status.Name))
+                {
+                    return BadRequest($"Status Data is Invalid.");
+                }
+
+                var createdStatus = await _statusUseCase.CreateStatusAsync(status);
+                var InfosStatusCreated = await _statusUseCase.GetStatusByIdAsync(createdStatus);
+
+                return CreatedAtAction(nameof(GetStatusByIdAsync), new {id = createdStatus}, InfosStatusCreated);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error When Created Status: {ex.Message}");
             }
         }
     }
