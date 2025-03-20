@@ -53,5 +53,29 @@ namespace ClinAgenda.Infrastructure.Repositories
 
             return await _connection.ExecuteScalarAsync<int>(query, statusInsertDTO);
         }
+
+        public async Task<(int total, IEnumerable<StatusDTO> specialtys)> GetAllAsync(int? itemsPerPage, int? page)
+        {
+            var queryBase = new StringBuilder(@"
+                FROM STATUS S WHERE 1 = 1"); // "1 = 1" is used to facilitate the addition of dynamic filters
+
+            var parameters = new DynamicParameters(); 
+
+            var countQuery = $"SELECT COUNT(DISTINCT S.ID) {queryBase}";
+            int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
+
+            var dataQuery = $@"
+            SELECT ID, 
+            NAME
+            {queryBase}
+            LIMIT @Limit OFFSET @Offset";
+
+            parameters.Add("Limit", itemsPerPage);
+            parameters.Add("Offset", (page - 1) * itemsPerPage);
+
+            var status = await _connection.QueryAsync<StatusDTO>(dataQuery, parameters);
+
+            return (total, status); 
+        }
     }
 }
