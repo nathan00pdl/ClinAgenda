@@ -399,6 +399,8 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-
 ### Environment Variable  ###
 .env
+
+### Compiled Files ###
+obj/
