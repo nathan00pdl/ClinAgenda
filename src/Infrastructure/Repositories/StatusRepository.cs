@@ -1,8 +1,9 @@
 using ClinAgenda.Core.Entities;
+using ClinAgenda.Core.Interfaces;
 
 namespace ClinAgenda.Infrastructure.Repositories
 {
-    public class StatusRepository
+    public class StatusRepository : IStatusRepository
     {
         private readonly MySqlConnection _connection;
 
