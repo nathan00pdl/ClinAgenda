@@ -1,3 +1,4 @@
+using ClinAgenda.Application.DTOs;
 using ClinAgenda.Core.Entities;
 using ClinAgenda.Core.Interfaces;
 
