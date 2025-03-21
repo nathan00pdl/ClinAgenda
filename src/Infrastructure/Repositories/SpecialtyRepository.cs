@@ -26,7 +26,7 @@ namespace ClinAgenda.Infrastructure.Repositories
 
             var specialty = await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, new { Id = id });
 
-            return specialty;
+            return specialty ?? throw new InvalidOperationException("Specialty Not Found.");
         }
 
         public async Task<int> DeleteSpecialtyAsync(int id)

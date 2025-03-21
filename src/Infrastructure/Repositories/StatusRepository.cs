@@ -28,7 +28,7 @@ namespace ClinAgenda.Infrastructure.Repositories
 
             var status = await _connection.QueryFirstOrDefaultAsync<StatusDTO>(query, parameters);
 
-            return status;
+            return status ?? throw new InvalidOperationException("Status Not Found.");
         }
 
         public async Task<int> DeleteStatusAsync(int id)
