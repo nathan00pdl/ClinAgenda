@@ -1,11 +1,12 @@
 using System.Text;
 using ClinAgenda.Application.DTOs;
+using ClinAgenda.Core.Interfaces;
 using Dapper;
 using MySql.Data.MySqlClient;
 
 namespace ClinAgenda.Infrastructure.Repositories
 {
-    public class SpecialtyRepository
+    public class SpecialtyRepository : ISpecialtyRepository
     {
         private readonly MySqlConnection _connection;
 
