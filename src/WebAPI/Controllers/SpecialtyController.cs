@@ -29,6 +29,30 @@ namespace ClinAgenda.WebAPI.Controllers
             }
         }
 
+        [HttpGet("listById/{id}")]
+        public async Task<IActionResult> GetSpecialtyByIdAsync(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return BadRequest("Invalid ID.");
+                }
+
+                var specialty = await _specialtyUsecase.GetSpecialtyByIdAsync(id);
+                if (specialty == null)
+                {
+                    return NotFound($"Specialty with ID {id} Not Found.");
+                }
+
+                return Ok(specialty);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+        
         [HttpPost("insert")]
         public async Task<IActionResult> CreateSpecialtyAsync([FromBody] SpecialtyInsertDTO specialty)
         {
@@ -55,28 +79,5 @@ namespace ClinAgenda.WebAPI.Controllers
             }
         }
 
-        [HttpGet("listById/{id}")]
-        public async Task<IActionResult> GetSpecialtyByIdAsync(int id)
-        {
-            try
-            {
-                if (id <= 0)
-                {
-                    return BadRequest("Invalid ID.");
-                }
-
-                var specialty = await _specialtyUsecase.GetSpecialtyByIdAsync(id);
-                if (specialty == null)
-                {
-                    return NotFound($"Specialty with ID {id} Not Found.");
-                }
-
-                return Ok(specialty);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
-        }
     }
 }
