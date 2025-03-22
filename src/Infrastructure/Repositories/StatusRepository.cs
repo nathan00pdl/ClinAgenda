@@ -19,7 +19,9 @@ namespace ClinAgenda.Infrastructure.Repositories
         public async Task<StatusDTO> GetByIdAsync(int id)
         {
             String query = @"
-                SELECT ID, NAME 
+                SELECT 
+                    ID, 
+                    NAME 
                 FROM STATUS
                 WHERE ID = @Id";
 
@@ -28,6 +30,16 @@ namespace ClinAgenda.Infrastructure.Repositories
             var status = await _connection.QueryFirstOrDefaultAsync<StatusDTO>(query, parameters);
 
             return status ?? throw new InvalidOperationException("Status Not Found.");
+        }
+
+        public async Task<int> InsertStatusAsync(StatusInsertDTO statusInsertDTO)
+        {
+            String query = @"
+                INSERT INTO STATUS (NAME) 
+                VALUES (@Name);
+                SELECT LAST_INSERT_ID();";
+
+            return await _connection.ExecuteScalarAsync<int>(query, statusInsertDTO);
         }
 
         public async Task<int> DeleteStatusAsync(int id)
@@ -43,16 +55,6 @@ namespace ClinAgenda.Infrastructure.Repositories
             return rowsAffected;
         }
 
-        public async Task<int> InsertStatusAsync(StatusInsertDTO statusInsertDTO)
-        {
-            String query = @"
-                INSERT INTO STATUS (NAME) 
-                VALUES (@Name);
-                SELECT LAST_INSERT_ID();";
-
-            return await _connection.ExecuteScalarAsync<int>(query, statusInsertDTO);
-        }
-
         public async Task<(int total, IEnumerable<StatusDTO> specialtys)> GetAllAsync(int? itemsPerPage, int? page)
         {
             var queryBase = new StringBuilder(@"FROM STATUS S WHERE 1 = 1"); // "1 = 1" is used to facilitate the addition of dynamic filters
@@ -63,7 +65,9 @@ namespace ClinAgenda.Infrastructure.Repositories
             int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
 
             var dataQuery = $@"
-                SELECT ID, NAME
+                SELECT 
+                    ID, 
+                    NAME
                 {queryBase}
                 LIMIT @Limit OFFSET @Offset";
 

@@ -17,13 +17,25 @@ namespace ClinAgenda.Infrastructure.Repositories
         public async Task<SpecialtyDTO> GetByIdAsync(int id)
         {
             const String query = @"
-                SELECT ID, NAME, SCHEDULEDURATION 
+                SELECT 
+                    ID, 
+                    NAME, 
+                    SCHEDULEDURATION 
                 FROM SPECIALTY
                 WHERE ID = @Id";
 
             var specialty = await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, new { Id = id });
 
             return specialty ?? throw new InvalidOperationException("Specialty Not Found.");
+        }
+
+        public async Task<int> InsertSpecialtyAsync(SpecialtyInsertDTO specialtyInsertDTO)
+        {
+            String query = @"
+                INSERT INTO SPECIALTY (NAME, SCHEDULEDURATION) 
+                VALUES (@Name, @Scheduleduration);
+                SELECT LAST_INSERT_ID();";
+            return await _connection.ExecuteScalarAsync<int>(query, specialtyInsertDTO);
         }
 
         public async Task<int> DeleteSpecialtyAsync(int id)
@@ -39,15 +51,6 @@ namespace ClinAgenda.Infrastructure.Repositories
             return rowsAffected;
         }
 
-        public async Task<int> InsertSpecialtyAsync(SpecialtyInsertDTO specialtyInsertDTO)
-        {
-            String query = @"
-                INSERT INTO SPECIALTY (NAME, SCHEDULEDURATION) 
-                VALUES (@Name, @Scheduleduration);
-                SELECT LAST_INSERT_ID();";
-            return await _connection.ExecuteScalarAsync<int>(query, specialtyInsertDTO);
-        }
-
         public async Task<(int total, IEnumerable<SpecialtyDTO> specialtys)> GetAllAsync(int? itemsPerPage, int? page)
         {
             var queryBase = new StringBuilder(@"FROM SPECIALTY S WHERE 1 = 1");
@@ -58,7 +61,10 @@ namespace ClinAgenda.Infrastructure.Repositories
             int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
 
             var dataQuery = $@"
-                SELECT ID, NAME, SCHEDULEDURATION 
+                SELECT 
+                    ID, 
+                    NAME, 
+                    SCHEDULEDURATION 
                 {queryBase}
                 LIMIT @Limit OFFSET @Offset";
 
