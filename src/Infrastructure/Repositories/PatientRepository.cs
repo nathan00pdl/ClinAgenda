@@ -1,11 +1,12 @@
 using System.Text;
 using ClinAgenda.Application.DTOs.Patient;
+using ClinAgenda.Core.Interfaces;
 using Dapper;
 using MySql.Data.MySqlClient;
 
 namespace ClinAgenda.Infrastructure.Repositories
 {
-    public class PatientRepository
+    public class PatientRepository : IPatientRepository
     {
         private readonly MySqlConnection _connection;
 
@@ -14,7 +15,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = connection;
         }
 
-        public async Task<PatientDTO> GetByIdAsync(int id)
+        public async Task<PatientDTO?> GetByIdAsync(int id)
         {
             const String query = @"
                 SELECT 
