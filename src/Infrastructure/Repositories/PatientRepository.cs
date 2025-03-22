@@ -35,7 +35,7 @@ namespace ClinAgenda.Infrastructure.Repositories
 
         public async Task<int> InsertPatientAsync(PatientInsertDTO patient)
         {
-            string query = @"
+            String query = @"
             INSERT INTO Patient (name, phoneNumber, documentNumber, statusId, birthDate) 
             VALUES (@Name, @PhoneNumber, @DocumentNumber, @StatusId, @BirthDate);
             SELECT LAST_INSERT_ID();";
@@ -44,7 +44,7 @@ namespace ClinAgenda.Infrastructure.Repositories
 
         public async Task<bool> UpdatePatientAsync(PatientDTO patient)
         {
-            string query = @"
+            String query = @"
             UPDATE Patient SET 
                 Name = @Name,
                 phoneNumber = @PhoneNumber,
@@ -58,7 +58,7 @@ namespace ClinAgenda.Infrastructure.Repositories
 
         public async Task<int> DeleteByPatientIdAsync(int id)
         {
-            string query = "DELETE FROM Patient WHERE ID = @Id";
+            String query = "DELETE FROM Patient WHERE ID = @Id";
 
             var parameters = new { Id = id };
 
@@ -67,7 +67,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return rowsAffected;
         }
 
-        public async Task<(int total, IEnumerable<PatientListDTO> patient)> GetPatientsAsync(string? name, string? documentNumber, int? statusId, int itemsPerPage, int page)
+        public async Task<(int total, IEnumerable<PatientListDTO> patient)> GetPatientsAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
         {
             var queryBase = new StringBuilder(@"     
                     FROM PATIENT P
@@ -76,13 +76,13 @@ namespace ClinAgenda.Infrastructure.Repositories
 
             var parameters = new DynamicParameters();
 
-            if (!string.IsNullOrEmpty(name))
+            if (!String.IsNullOrEmpty(name))
             {
                 queryBase.Append(" AND P.NAME LIKE @Name");
                 parameters.Add("Name", $"%{name}%");
             }
 
-            if (!string.IsNullOrEmpty(documentNumber))
+            if (!String.IsNullOrEmpty(documentNumber))
             {
                 queryBase.Append(" AND P.DOCUMENTNUMBER LIKE @DocumentNumber");
                 parameters.Add("DocumentNumber", $"%{documentNumber}%");

@@ -11,8 +11,8 @@ namespace ClinAgenda.Application.UseCases
         {
             _patientRepository = patientRepository;
         }
-        
-        public async Task<object> GetPatientsAsync(string? name, string? documentNumber, int? statusId, int itemsPerPage, int page)
+
+        public async Task<object> GetPatientsAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
         {
             var (total, rawData) = await _patientRepository.GetPatientsAsync(name, documentNumber, statusId, itemsPerPage, page);
 
