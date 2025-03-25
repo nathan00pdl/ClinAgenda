@@ -40,5 +40,20 @@ namespace ClinAgenda.Application.UseCases
         {
             return await _patientRepository.GetByIdAsync(id);
         }
+
+        public async Task<bool> UpdatePatientAsync(int patientId, PatientInsertDTO patientInsertDTO)
+        {
+            var existingPatient = await _patientRepository.GetByIdAsync(patientId) ?? throw new KeyNotFoundException("Patient Not Found");
+
+            existingPatient.Name = patientInsertDTO.Name;
+            existingPatient.PhoneNumber = patientInsertDTO.PhoneNumber;
+            existingPatient.DocumentNumber = patientInsertDTO.DocumentNumber;
+            existingPatient.StatusId = patientInsertDTO.StatusId;
+            existingPatient.BirthDate = patientInsertDTO.BirthDate;
+
+            var isUpdated = await _patientRepository.UpdatePatientAsync(existingPatient);
+
+            return isUpdated;
+        }
     }
 }
