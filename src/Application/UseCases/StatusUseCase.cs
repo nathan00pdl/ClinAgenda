@@ -6,16 +6,16 @@ namespace ClinAgenda.Application.UseCases
 {
     public class StatusUseCase
     {
-        private readonly IStatusRepository _statusRepository;
+        private readonly IStatusRepository _IstatusRepository;
 
         public StatusUseCase(IStatusRepository statusRepository)
         {
-            _statusRepository = statusRepository; 
+            _IstatusRepository = statusRepository; 
         }
 
         public async Task<object> GetStatusAsync(int itemsPerPage, int page)
         {
-            var (total, rawData) = await _statusRepository.GetAllAsync(itemsPerPage, page);
+            var (total, rawData) = await _IstatusRepository.GetAllAsync(itemsPerPage, page);
 
             return new
             {
@@ -26,17 +26,12 @@ namespace ClinAgenda.Application.UseCases
 
         public async Task<StatusDTO?> GetStatusByIdAsync(int id)
         {
-            return await _statusRepository.GetByIdAsync(id);
+            return await _IstatusRepository.GetByIdAsync(id);
         }
-        
-        public async Task<int> CreateStatusAsync(StatusInsertDTO statusDTO)
-        {
-            var status = new StatusInsertDTO
-            {
-                Name = statusDTO.Name
-            };
 
-            var newStatusId = await _statusRepository.InsertStatusAsync(status);
+        public async Task<int> CreateStatusAsync(StatusInsertDTO statusInsertDTO)
+        {
+            var newStatusId = await _IstatusRepository.InsertStatusAsync(statusInsertDTO );
 
             return newStatusId; 
         }
