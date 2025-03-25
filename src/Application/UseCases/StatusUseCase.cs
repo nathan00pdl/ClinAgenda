@@ -28,6 +28,7 @@ namespace ClinAgenda.Application.UseCases
         {
             return await _statusRepository.GetByIdAsync(id);
         }
+        
         public async Task<int> CreateStatusAsync(StatusInsertDTO statusDTO)
         {
             var status = new StatusInsertDTO

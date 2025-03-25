@@ -5,12 +5,19 @@ using Dapper;
 using ClinAgenda.Core.Entities;
 using ClinAgenda.Core.Interfaces;
 
+/* 
+ * Note
+ *
+ * Injection Dependency by constructor avoid recreating the connection with the database.
+ */
+
 namespace ClinAgenda.Infrastructure.Repositories
 {
     public class StatusRepository : IStatusRepository
     {
         private readonly MySqlConnection _connection;
 
+        // Injection Dependency by constructor
         public StatusRepository(MySqlConnection connection)
         {
             _connection = connection;
@@ -25,7 +32,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                 FROM STATUS
                 WHERE ID = @Id";
 
-            var parameters = new { Id = id };
+            var parameters = new { Id = id }; // Creating an anonymous object to avoid SQL injection
 
             var status = await _connection.QueryFirstOrDefaultAsync<StatusDTO>(query, parameters);
 
@@ -39,7 +46,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                 VALUES (@Name);
                 SELECT LAST_INSERT_ID();";
 
-            return await _connection.ExecuteScalarAsync<int>(query, statusInsertDTO);
+            return await _connection.ExecuteScalarAsync<int>(query, statusInsertDTO); // @Name is passed by statusInsertDTO
         }
 
         public async Task<int> DeleteStatusAsync(int id)
