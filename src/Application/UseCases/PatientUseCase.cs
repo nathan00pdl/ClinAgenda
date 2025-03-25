@@ -7,6 +7,7 @@ namespace ClinAgenda.Application.UseCases
     public class PatientUseCase
     {
         private readonly IPatientRepository _patientRepository;
+
         public PatientUseCase(IPatientRepository patientRepository)
         {
             _patientRepository = patientRepository;
@@ -33,6 +34,11 @@ namespace ClinAgenda.Application.UseCases
                 .ToList();
 
             return new { total, items = patients };
+        }
+
+        public async Task<PatientListDTO> GetPatientByIdAsync(int id)
+        {
+            return await _patientRepository.GetByIdAsync(id);
         }
     }
 }

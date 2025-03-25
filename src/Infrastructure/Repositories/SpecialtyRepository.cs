@@ -35,6 +35,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                 INSERT INTO SPECIALTY (NAME, SCHEDULEDURATION) 
                 VALUES (@Name, @Scheduleduration);
                 SELECT LAST_INSERT_ID();";
+                
             return await _connection.ExecuteScalarAsync<int>(query, specialtyInsertDTO);
         }
 
