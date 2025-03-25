@@ -9,11 +9,11 @@ namespace ClinAgenda.WebAPI.Controllers
     [Route("api/status")]
     public class StatusController : ControllerBase
     {
-        private readonly StatusUseCase _StatusUseCase;
+        private readonly StatusUseCase _statusUseCase;
 
         public StatusController(StatusUseCase service)
         {
-            _StatusUseCase = service;
+            _statusUseCase = service;
         }
 
         [HttpGet("list")]
@@ -21,15 +21,9 @@ namespace ClinAgenda.WebAPI.Controllers
         {
             try
             {
-                var (total, rawData) = await _StatusUseCase.GetStatusAsync(itemsPerPage, page);
+                var specialty = await _statusUseCase.GetStatusAsync(itemsPerPage, page);
 
-                return ok(new
-                {
-                    total,
-                    itemsPerPage,
-                    page,
-                    items = rawData.ToList()
-                });
+                return Ok(specialty);
             }
             catch (Exception ex)
             {
@@ -42,21 +36,14 @@ namespace ClinAgenda.WebAPI.Controllers
         {
             try
             {
-                var specialty = await _StatusUseCase.GetStatusByIdAsync(id);
+                var specialty = await _statusUseCase.GetStatusByIdAsync(id);
 
                 if (specialty == null)
                 {
-                    return NotFound(new
-                    {
-                        message = $"Status with ID {id} Not Found."
-                    });
+                    return NotFound($"Status with ID {id} Not Found.");
                 }
 
-                return Ok(new
-                {
-                    message = "Status Not Found",
-                    status = specialty
-                });
+                return Ok(specialty);
             }
             catch (Exception ex)
             {
@@ -74,10 +61,10 @@ namespace ClinAgenda.WebAPI.Controllers
                     return BadRequest($"Status Data is Invalid.");
                 }
 
-                var createdStatus = await _StatusUseCase.CreateStatusAsync(statusInsertDTO);
-                var InfosStatusCreated = await _StatusUseCase.GetStatusByIdAsync(createdStatus);
+                var createdStatus = await _statusUseCase.CreateStatusAsync(statusInsertDTO);
+                var InfosStatusCreated = await _statusUseCase.GetStatusByIdAsync(createdStatus);
 
-                return CreatedAtAction(nameof(GetStatusByIdAsync), new {id = createdStatus}, InfosStatusCreated);
+                return Ok(InfosStatusCreated);
             }
             catch (Exception ex)
             {
