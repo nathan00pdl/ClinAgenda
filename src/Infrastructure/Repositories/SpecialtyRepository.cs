@@ -14,6 +14,32 @@ namespace ClinAgenda.Infrastructure.Repositories
         {
             _connection = connection;
         }
+
+        public async Task<(int total, IEnumerable<SpecialtyDTO> specialtys)> GetAllAsync(int? itemsPerPage, int? page)
+        {
+            var queryBase = new StringBuilder(@"FROM SPECIALTY S WHERE 1 = 1");
+
+            var parameters = new DynamicParameters();
+
+            var countQuery = $"SELECT COUNT(DISTINCT S.ID) {queryBase}";
+            int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
+
+            var dataQuery = $@"
+                SELECT 
+                    ID, 
+                    NAME, 
+                    SCHEDULEDURATION 
+                {queryBase}
+                LIMIT @Limit OFFSET @Offset";
+
+            parameters.Add("Limit", itemsPerPage);
+            parameters.Add("Offset", (page - 1) * itemsPerPage);
+
+            var specialtys = await _connection.QueryAsync<SpecialtyDTO>(dataQuery, parameters);
+
+            return (total, specialtys);
+        }
+
         public async Task<SpecialtyDTO> GetByIdAsync(int id)
         {
             const String query = @"
@@ -50,31 +76,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             var rowsAffected = await _connection.ExecuteAsync(query, parameters);
 
             return rowsAffected;
-        }
 
-        public async Task<(int total, IEnumerable<SpecialtyDTO> specialtys)> GetAllAsync(int? itemsPerPage, int? page)
-        {
-            var queryBase = new StringBuilder(@"FROM SPECIALTY S WHERE 1 = 1");
-
-            var parameters = new DynamicParameters();
-
-            var countQuery = $"SELECT COUNT(DISTINCT S.ID) {queryBase}";
-            int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
-
-            var dataQuery = $@"
-                SELECT 
-                    ID, 
-                    NAME, 
-                    SCHEDULEDURATION 
-                {queryBase}
-                LIMIT @Limit OFFSET @Offset";
-
-            parameters.Add("Limit", itemsPerPage);
-            parameters.Add("Offset", (page - 1) * itemsPerPage);
-
-            var specialtys = await _connection.QueryAsync<SpecialtyDTO>(dataQuery, parameters);
-
-            return (total, specialtys);
         }
     }
 }
