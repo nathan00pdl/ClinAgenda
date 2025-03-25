@@ -15,6 +15,57 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = connection;
         }
 
+        public async Task<(int total, IEnumerable<PatientListDTO> patient)> GetPatientsAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
+        {
+            var queryBase = new StringBuilder(@"     
+                    FROM PATIENT P
+                    INNER JOIN STATUS S ON S.ID = P.STATUSID
+                    WHERE 1 = 1");
+
+            var parameters = new DynamicParameters();
+
+            if (!String.IsNullOrEmpty(name))
+            {
+                queryBase.Append(" AND P.NAME LIKE @Name");
+                parameters.Add("Name", $"%{name}%");
+            }
+
+            if (!String.IsNullOrEmpty(documentNumber))
+            {
+                queryBase.Append(" AND P.DOCUMENTNUMBER LIKE @DocumentNumber");
+                parameters.Add("DocumentNumber", $"%{documentNumber}%");
+            }
+
+            if (statusId.HasValue)
+            {
+                queryBase.Append(" AND S.ID = @StatusId");
+                parameters.Add("StatusId", statusId.Value);
+            }
+
+            var countQuery = $"SELECT COUNT(DISTINCT P.ID) {queryBase}";
+            int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
+
+            var dataQuery = $@"
+                    SELECT 
+                        P.ID, 
+                        P.NAME,
+                        P.PHONENUMBER,
+                        P.DOCUMENTNUMBER,
+                        P.BIRTHDATE ,
+                        P.STATUSID AS STATUSID, 
+                        S.NAME AS STATUSNAME
+                    {queryBase}
+                    ORDER BY P.ID
+                    LIMIT @Limit OFFSET @Offset";
+
+            parameters.Add("Limit", itemsPerPage);
+            parameters.Add("Offset", (page - 1) * itemsPerPage);
+
+            var patients = await _connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
+
+            return (total, patients);
+        }
+        
         public async Task<PatientDTO?> GetByIdAsync(int id)
         {
             const String query = @"
@@ -67,55 +118,5 @@ namespace ClinAgenda.Infrastructure.Repositories
             return rowsAffected;
         }
 
-        public async Task<(int total, IEnumerable<PatientListDTO> patient)> GetPatientsAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
-        {
-            var queryBase = new StringBuilder(@"     
-                    FROM PATIENT P
-                    INNER JOIN STATUS S ON S.ID = P.STATUSID
-                    WHERE 1 = 1");
-
-            var parameters = new DynamicParameters();
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                queryBase.Append(" AND P.NAME LIKE @Name");
-                parameters.Add("Name", $"%{name}%");
-            }
-
-            if (!String.IsNullOrEmpty(documentNumber))
-            {
-                queryBase.Append(" AND P.DOCUMENTNUMBER LIKE @DocumentNumber");
-                parameters.Add("DocumentNumber", $"%{documentNumber}%");
-            }
-
-            if (statusId.HasValue)
-            {
-                queryBase.Append(" AND S.ID = @StatusId");
-                parameters.Add("StatusId", statusId.Value);
-            }
-
-            var countQuery = $"SELECT COUNT(DISTINCT P.ID) {queryBase}";
-            int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
-
-            var dataQuery = $@"
-                    SELECT 
-                        P.ID, 
-                        P.NAME,
-                        P.PHONENUMBER,
-                        P.DOCUMENTNUMBER,
-                        P.BIRTHDATE ,
-                        P.STATUSID AS STATUSID, 
-                        S.NAME AS STATUSNAME
-                    {queryBase}
-                    ORDER BY P.ID
-                    LIMIT @Limit OFFSET @Offset";
-
-            parameters.Add("Limit", itemsPerPage);
-            parameters.Add("Offset", (page - 1) * itemsPerPage);
-
-            var patients = await _connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
-
-            return (total, patients);
-        }
     }
 }
