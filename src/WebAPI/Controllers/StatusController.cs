@@ -9,11 +9,11 @@ namespace ClinAgenda.WebAPI.Controllers
     [Route("api/status")]
     public class StatusController : ControllerBase
     {
-        private readonly StatusUseCase _statusUseCase;
+        private readonly StatusUseCase _StatusUseCase;
 
         public StatusController(StatusUseCase service)
         {
-            _statusUseCase = service;
+            _StatusUseCase = service;
         }
 
         [HttpGet("list")]
@@ -21,8 +21,15 @@ namespace ClinAgenda.WebAPI.Controllers
         {
             try
             {
-                var specialty = await _statusUseCase.GetStatusAsync(itemsPerPage, page);
-                return Ok(specialty);
+                var (total, rawData) = await _StatusUseCase.GetStatusAsync(itemsPerPage, page);
+
+                return ok(new
+                {
+                    total,
+                    itemsPerPage,
+                    page,
+                    items = rawData.ToList()
+                });
             }
             catch (Exception ex)
             {
@@ -35,14 +42,21 @@ namespace ClinAgenda.WebAPI.Controllers
         {
             try
             {
-                var specialty = await _statusUseCase.GetStatusByIdAsync(id);
+                var specialty = await _StatusUseCase.GetStatusByIdAsync(id);
 
                 if (specialty == null)
                 {
-                    return NotFound($"Status with ID {id} Not Found.");
+                    return NotFound(new
+                    {
+                        message = $"Status with ID {id} Not Found."
+                    });
                 }
 
-                return Ok(specialty);
+                return Ok(new
+                {
+                    message = "Status Not Found",
+                    status = specialty
+                });
             }
             catch (Exception ex)
             {
@@ -51,17 +65,17 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpPost("insert")]
-        public async Task<IActionResult> CreateStatusAsync([FromBody] StatusInsertDTO status)
+        public async Task<IActionResult> CreateStatusAsync([FromBody] StatusInsertDTO statusInsertDTO)
         {
             try
             {
-                if (status == null || string.IsNullOrWhiteSpace(status.Name))
+                if (statusInsertDTO == null || string.IsNullOrWhiteSpace(statusInsertDTO.Name))
                 {
                     return BadRequest($"Status Data is Invalid.");
                 }
 
-                var createdStatus = await _statusUseCase.CreateStatusAsync(status);
-                var InfosStatusCreated = await _statusUseCase.GetStatusByIdAsync(createdStatus);
+                var createdStatus = await _StatusUseCase.CreateStatusAsync(statusInsertDTO);
+                var InfosStatusCreated = await _StatusUseCase.GetStatusByIdAsync(createdStatus);
 
                 return CreatedAtAction(nameof(GetStatusByIdAsync), new {id = createdStatus}, InfosStatusCreated);
             }
