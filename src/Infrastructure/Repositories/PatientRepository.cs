@@ -86,7 +86,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return patient ?? throw new InvalidOperationException("Patient Not Found.");
         }
 
-        public async Task<int> InsertPatientAsync(PatientInsertDTO patientInsertDTO)
+        public async Task<int> InsertPatientAsync(PatientInsertDTO patientInsertDTO) 
         {
             String query = @"
                 INSERT INTO Patient (name, phoneNumber, documentNumber, statusId, birthDate) 
@@ -150,7 +150,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                 ORDER BY P.ID";
             
             var doctors = await _connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
-            
+
             return doctors;
         }
 
