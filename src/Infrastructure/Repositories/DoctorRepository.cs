@@ -61,29 +61,85 @@ namespace ClinAgenda.Infrastructure.Repositories
             return await _connection.QueryAsync<DoctorListDTO>(query.ToString(), parameters);
         }
 
-        public Task<IEnumerable<DoctorListDTO>> GetDoctorsByIdAsync(int id)
+        public async Task<IEnumerable<DoctorListDTO>> GetDoctorsByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var queryBase = new StringBuilder(@"
+                FROM DOCTOR D
+                LEFT JOIN DOCTOR_SPECIALTY DSPE ON D.ID = DSPE.DOCTORID
+                LEFT JOIN STATUS S ON S.ID = D.STATUSID
+                LEFT JOIN SPECIALTY SP ON SP.ID = DSPE.SPECIALTYID
+                WHERE 1 = 1 "
+            );
+
+            var parameters = new DynamicParameters();
+
+            if (id > 0)
+            {
+                queryBase.Append(" AND D.ID = @id");
+                parameters.Add("id", id);
+            }    
+
+            var dataQuery = $@"
+                SELECT DISTINCT 
+                    D.ID,
+                    D.NAME,
+                    D.STATUSID AS STATUSID,
+                    D.NAME AS STATUSNAME,
+                    DSPE.SPECIALTYID AS SPECIALTYID,
+                    SP.NAME AS SPECIALTYNAME
+                {queryBase}
+                ORDER BY D.ID";
+
+                return await _connection.QueryAsync<DoctorListDTO>(dataQuery, parameters);
         }
 
-        public Task<IEnumerable<SpecialtyDoctorDTO>> GetDoctorSpecialtiesAsync(int[] doctorIds)
+        public async Task<IEnumerable<SpecialtyDoctorDTO>> GetDoctorSpecialtiesAsync(int[] doctorIds)
         {
-            throw new NotImplementedException();
+            var query = @"
+                SELECT 
+                    DS.DOCTORID AS DOCTORID,
+                    SP.ID AS SPECIALTYID,
+                    SP.NAME AS SPECIALTYNAME,
+                    SP.SCHEDULEDURATION 
+                FROM DOCTOR_SPECIALTY DS
+                INNER JOIN SPECIALTY SP ON DS.SPECIALTYID = SP.ID
+                WHERE DS.DOCTORID IN @DOCTORIDS";
+            
+            var parameters = new { DoctorIds = doctorIds };
+
+            return await _connection.QueryAsync<SpecialtyDoctorDTO>(query, parameters);
         }
 
-        public Task<int> InsertDoctorAsync(DoctorInsertDTO doctorInsertDTO)
+        public async Task<int> InsertDoctorAsync(DoctorInsertDTO doctorInsertDTO)
         {
-            throw new NotImplementedException();
+            String query = @"
+                INSERT INTO Doctor (Name, StatusId)
+                VALUES (@Name, @StatusId);
+                SELECT LAST_INSERT_ID();";
+
+                return await _connection.ExecuteScalarAsync<int>(query, doctor);
         }
 
-        public Task<bool> UpdateDoctorAsync(DoctorDTO doctorDTO)
+        public async Task<bool> UpdateDoctorAsync(DoctorDTO doctorDTO)
         {
-            throw new NotImplementedException();
+            String query = @"
+                UPDATE Doctor SET 
+                    Name = @Name, 
+                    StatusId = @StatusId
+                WHERE Id = @Id";
+
+            var rowsAffected = await _connection.ExecuteAsync(query, doctor);
+            return rowsAffected > 0;
         }
 
-        public Task<int> DeleteDoctorAsync(int id)
+        public async Task<int> DeleteDoctorAsync(int id)
         {
-            throw new NotImplementedException();
+            String query = "DELETE FROM DOCTOR WHERE ID = @Id";
+
+            var parameters = new { Id = id };
+
+            var rowsAffected = await _connection.ExecuteAsync(query, parameters);
+            return rowsAffected;
         }
     }
 }
