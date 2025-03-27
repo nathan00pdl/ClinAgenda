@@ -54,16 +54,16 @@ namespace ClinAgenda.WebAPI.Controllers
         }
         
         [HttpPost("insert")]
-        public async Task<IActionResult> CreateSpecialty([FromBody] SpecialtyInsertDTO specialty)
+        public async Task<IActionResult> CreateSpecialty([FromBody] SpecialtyInsertDTO specialtyInsertDTO)
         {
             try
             {
-                if (specialty == null)
+                if (specialtyInsertDTO == null)
                 {
                     return BadRequest("Invalid Datas for Specialty Creation.");
                 }
 
-                var createdSpecialty = await _specialtyUsecase.CreateSpecialtyAsync(specialty);
+                var createdSpecialty = await _specialtyUsecase.CreateSpecialtyAsync(specialtyInsertDTO);
 
                 if (!(createdSpecialty > 0))
                 {

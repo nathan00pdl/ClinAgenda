@@ -17,7 +17,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GetStatusAsync([FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
+        public async Task<IActionResult> GetStatus([FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("listById/{id}")]
-        public async Task<IActionResult> GetStatusByIdAsync(int id)
+        public async Task<IActionResult> GetStatusById(int id)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpPost("insert")]
-        public async Task<IActionResult> CreateStatusAsync([FromBody] StatusInsertDTO statusInsertDTO)
+        public async Task<IActionResult> CreateStatus([FromBody] StatusInsertDTO statusInsertDTO)
         {
             try
             {
