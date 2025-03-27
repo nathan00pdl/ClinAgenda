@@ -16,7 +16,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = mySqlConnection;
         }
 
-        public async Task<IEnumerable<DoctorListDTO>> GetDoctorsAsync(string? name, int? specialtyId, int? statusId, int offset, int itemsPerPage)
+        public async Task<IEnumerable<DoctorListDTO>> GetDoctorAsync(string? name, int? specialtyId, int? statusId, int offset, int itemsPerPage)
         {
             var innerJoins = new StringBuilder(@"
                 FROM DOCTOR D
@@ -61,7 +61,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return await _connection.QueryAsync<DoctorListDTO>(query.ToString(), parameters);
         }
 
-        public async Task<IEnumerable<DoctorListDTO>> GetDoctorsByIdAsync(int id)
+        public async Task<IEnumerable<DoctorListDTO>> GetDoctorByIdAsync(int id)
         {
             var queryBase = new StringBuilder(@"
                 FROM DOCTOR D
