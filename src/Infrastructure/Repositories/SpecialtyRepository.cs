@@ -15,7 +15,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = connection;
         }
 
-        public async Task<(int total, IEnumerable<SpecialtyDTO> specialtys)> GetAllAsync(int? itemsPerPage, int? page)
+        public async Task<(int total, IEnumerable<SpecialtyDTO> specialtys)> GetAllSpecialtiesAsync(int? itemsPerPage, int? page)
         {
             var queryBase = new StringBuilder(@"FROM SPECIALTY S WHERE 1 = 1");
 
@@ -40,7 +40,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return (total, specialtys);
         }
 
-        public async Task<SpecialtyDTO> GetByIdAsync(int id)
+        public async Task<SpecialtyDTO> GetSpecialtyByIdAsync(int id)
         {
             const String query = @"
                 SELECT 
