@@ -126,7 +126,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             var queryBase = new StringBuilder(@"
                 FROM PATIENT P 
                 INNER JOIN STATUS S ON S.ID = P.STATUSID
-                WHERE 1 = 1"
+                WHERE 1 = 1 "
             );
 
             var parameters = new DynamicParameters();

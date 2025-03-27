@@ -23,10 +23,10 @@ namespace ClinAgenda.Application.UseCases
             };
         }
 
-        public async Task<int> CreateSpecialtyAsync(SpecialtyInsertDTO specialtyDTO)
+        public async Task<int> CreateSpecialtyAsync(SpecialtyInsertDTO specialtyInsertDTO)
         {
            
-            var newSpecialtyId = await _specialtyRepository.InsertSpecialtyAsync(specialtyDTO);
+            var newSpecialtyId = await _specialtyRepository.InsertSpecialtyAsync(specialtyInsertDTO);
 
             return newSpecialtyId;
 

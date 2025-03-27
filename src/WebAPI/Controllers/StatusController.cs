@@ -1,6 +1,5 @@
 using ClinAgenda.Application.DTOs;
 using ClinAgenda.Application.UseCases;
-using ClinAgenda.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinAgenda.WebAPI.Controllers
