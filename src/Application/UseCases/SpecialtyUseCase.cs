@@ -23,6 +23,16 @@ namespace ClinAgenda.Application.UseCases
             };
         }
 
+        public async Task<SpecialtyDTO?> GetSpecialtyByIdAsync(int id)
+        {
+            return await _specialtyRepository.GetSpecialtyByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> id)
+        {
+            return await _specialtyRepository.GetSpecialtiesByIds(id);
+        }
+
         public async Task<int> CreateSpecialtyAsync(SpecialtyInsertDTO specialtyInsertDTO)
         {
            
@@ -30,10 +40,6 @@ namespace ClinAgenda.Application.UseCases
 
             return newSpecialtyId;
 
-        }
-        public async Task<SpecialtyDTO?> GetSpecialtyByIdAsync(int id)
-        {
-            return await _specialtyRepository.GetSpecialtyByIdAsync(id);
         }
     }
 }

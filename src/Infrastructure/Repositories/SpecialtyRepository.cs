@@ -40,6 +40,21 @@ namespace ClinAgenda.Infrastructure.Repositories
             return (total, specialtys);
         }
 
+        public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> specialtiesId)
+        {
+            var query = @"
+                SELECT 
+                    S.ID, 
+                    S.NAME,
+                    S.SCHEDULEDURATION 
+                FROM SPECIALTY S
+                WHERE S.ID IN @SPECIALTIESID";
+
+            var parameters = new { SpecialtiesID = specialtiesId };
+
+            return await _connection.QueryAsync<SpecialtyDTO>(query, parameters);
+        }
+
         public async Task<SpecialtyDTO> GetSpecialtyByIdAsync(int id)
         {
             const String query = @"

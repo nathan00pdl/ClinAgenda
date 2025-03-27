@@ -54,7 +54,7 @@ namespace ClinAgenda.WebAPI.Controllers
             {
                 var hasStatus = await _statusUseCase.GetStatusByIdAsync(patientInsertDTO.StatusId);
                 if (hasStatus == null)
-                    return BadRequest($"The Status with ID {patientInsertDTO.StatusId} Dont Exist.");
+                    return BadRequest($"The Status with ID {patientInsertDTO.StatusId} Does Not Exist.");
 
                 var createdPatientId = await _patientUseCase.CreatePatientAsync(patientInsertDTO);
                 if (!(createdPatientId > 0))
@@ -80,7 +80,7 @@ namespace ClinAgenda.WebAPI.Controllers
                 if (patientInsertDTO == null) return BadRequest();
 
                 var hasStatus = await _statusUseCase.GetStatusByIdAsync(patientInsertDTO.StatusId);
-                if (hasStatus == null) return BadRequest($"O status ID {patientInsertDTO.StatusId} não existe");
+                if (hasStatus == null) return BadRequest($"The Status ID {patientInsertDTO.StatusId} Does Not Exist.");
 
                 bool updated = await _patientUseCase.UpdatePatientAsync(id, patientInsertDTO);
                 if (!updated) return NotFound("Patient Not Found.");
