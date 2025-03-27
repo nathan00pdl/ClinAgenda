@@ -42,6 +42,12 @@ namespace ClinAgenda.Application.UseCases
             return patient;
         }
 
+        public async Task<int> CreatePatientAsync(PatientInsertDTO patientInsertDTO) 
+        {
+            var newPatient = await _patientRepository.InsertPatientAsync(patientInsertDTO);
+            return newPatient;
+        }
+
         public async Task<bool> UpdatePatientAsync(int patientId, PatientInsertDTO patientInsertDTO)
         {
             var existingPatient = await _patientRepository.GetPatientByIdAsync(patientId) ?? throw new KeyNotFoundException("Patient Not Found");

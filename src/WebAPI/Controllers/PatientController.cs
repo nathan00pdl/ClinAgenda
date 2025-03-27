@@ -48,15 +48,15 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpPost("insert")]
-        public async Task<IActionResult> CreatePatient([FromBody] PatientInsertDTO patient)
+        public async Task<IActionResult> CreatePatient([FromBody] PatientInsertDTO patientInsertDTO)
         {
             try
             {
-                var hasStatus = await _statusUseCase.GetStatusByIdAsync(patient.StatusId);
+                var hasStatus = await _statusUseCase.GetStatusByIdAsync(patientInsertDTO.StatusId);
                 if (hasStatus == null)
-                    return BadRequest($"The Status with ID {patient.StatusId} Dont Exist.");
+                    return BadRequest($"The Status with ID {patientInsertDTO.StatusId} Dont Exist.");
 
-                var createdPatientId = await _patientUseCase.CreatePatientAsync(patient);
+                var createdPatientId = await _patientUseCase.CreatePatientAsync(patientInsertDTO);
                 if (!(createdPatientId > 0))
                 {
                     return StatusCode(500, "Error Creating Patient.");
@@ -73,16 +73,16 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdatePatientAsync(int id, [FromBody] PatientInsertDTO patient)
+        public async Task<IActionResult> UpdatePatientAsync(int id, [FromBody] PatientInsertDTO patientInsertDTO)
         {
             try
             {
-                if (patient == null) return BadRequest();
+                if (patientInsertDTO == null) return BadRequest();
 
-                var hasStatus = await _statusUseCase.GetStatusByIdAsync(patient.StatusId);
-                if (hasStatus == null) return BadRequest($"O status ID {patient.StatusId} não existe");
+                var hasStatus = await _statusUseCase.GetStatusByIdAsync(patientInsertDTO.StatusId);
+                if (hasStatus == null) return BadRequest($"O status ID {patientInsertDTO.StatusId} não existe");
 
-                bool updated = await _patientUseCase.UpdatePatientAsync(id, patient);
+                bool updated = await _patientUseCase.UpdatePatientAsync(id, patientInsertDTO);
                 if (!updated) return NotFound("Patient Not Found.");
                 var infosPatientUpdate = await _patientUseCase.GetPatientByIdAsync(id);
 
@@ -99,7 +99,7 @@ namespace ClinAgenda.WebAPI.Controllers
         {
             try
             {
-                var result = await _patientUseCase.AutoComplete(name);
+                var result = await _patientUseCase.AutoCompletePatient(name ?? string.Empty);
                 return Ok(result);
             }
             catch (Exception ex)
