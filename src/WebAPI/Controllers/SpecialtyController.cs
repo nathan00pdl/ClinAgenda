@@ -16,7 +16,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GetSpecialtyAsync([FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
+        public async Task<IActionResult> GetSpecialty([FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("listById/{id}")]
-        public async Task<IActionResult> GetSpecialtyByIdAsync(int id)
+        public async Task<IActionResult> GetSpecialtyById(int id)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
         
         [HttpPost("insert")]
-        public async Task<IActionResult> CreateSpecialtyAsync([FromBody] SpecialtyInsertDTO specialty)
+        public async Task<IActionResult> CreateSpecialty([FromBody] SpecialtyInsertDTO specialty)
         {
             try
             {
