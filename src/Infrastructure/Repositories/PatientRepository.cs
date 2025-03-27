@@ -67,7 +67,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return (total, patients);
         }
 
-        public async Task<PatientDTO?> GetByIdAsync(int id)
+        public async Task<PatientDTO?> GetPatientByIdAsync(int id)
         {
             const String query = @"
                 SELECT 
@@ -121,7 +121,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return rowsAffected;
         }
 
-        public async Task<IEnumerable<PatientListDTO>> AutoComplete(String name)
+        public async Task<IEnumerable<PatientListDTO>> AutoCompletePatient(String name)
         {
             var queryBase = new StringBuilder(@"
                 FROM PATIENT P 
