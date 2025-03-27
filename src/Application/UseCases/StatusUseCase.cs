@@ -15,7 +15,7 @@ namespace ClinAgenda.Application.UseCases
 
         public async Task<object> GetStatusAsync(int itemsPerPage, int page)
         {
-            var (total, rawData) = await _statusRepository.GetAllAsync(itemsPerPage, page);
+            var (total, rawData) = await _statusRepository.GetAllStatusAsync(itemsPerPage, page);
 
             return new
             {
@@ -26,7 +26,7 @@ namespace ClinAgenda.Application.UseCases
 
         public async Task<StatusDTO?> GetStatusByIdAsync(int id)
         {
-            return await _statusRepository.GetByIdAsync(id);
+            return await _statusRepository.GetStatusByIdAsync(id);
         }
 
         public async Task<int> CreateStatusAsync(StatusInsertDTO statusInsertDTO)

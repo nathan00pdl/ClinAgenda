@@ -1,3 +1,5 @@
+using ClinAgenda.Core.Entities;
+
 namespace ClinAgenda.Application.DTOs.Doctor
 {
     public class DoctorListReturnDTO

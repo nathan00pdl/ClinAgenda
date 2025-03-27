@@ -13,9 +13,9 @@ namespace ClinAgenda.Application.UseCases
             _patientRepository = patientRepository;
         }
 
-        public async Task<object> GetPatientsAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
+        public async Task<object> GetAllPatientAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
         {
-            var (total, rawData) = await _patientRepository.GetPatientsAsync(name, documentNumber, statusId, itemsPerPage, page);
+            var (total, rawData) = await _patientRepository.GetAllPatientAsync(name, documentNumber, statusId, itemsPerPage, page);
 
             var patients = rawData
                 .Select(p => new PatientListReturnDTO
@@ -36,14 +36,15 @@ namespace ClinAgenda.Application.UseCases
             return new { total, items = patients };
         }
 
-        public async Task<PatientListDTO> GetPatientByIdAsync(int id)
+        public async Task<PatientDTO> GetPatientByIdAsync(int id)
         {
-            return await _patientRepository.GetByIdAsync(id);
+            var patient = await _patientRepository.GetPatientByIdAsync(id) ?? throw new KeyNotFoundException("Patient Not Found");
+            return patient;
         }
 
         public async Task<bool> UpdatePatientAsync(int patientId, PatientInsertDTO patientInsertDTO)
         {
-            var existingPatient = await _patientRepository.GetByIdAsync(patientId) ?? throw new KeyNotFoundException("Patient Not Found");
+            var existingPatient = await _patientRepository.GetPatientByIdAsync(patientId) ?? throw new KeyNotFoundException("Patient Not Found");
 
             existingPatient.Name = patientInsertDTO.Name;
             existingPatient.PhoneNumber = patientInsertDTO.PhoneNumber;
@@ -56,12 +57,12 @@ namespace ClinAgenda.Application.UseCases
             return isUpdated;
         }
 
-        public async Task<object?> AutoComplete(String name)
+        public async Task<object?> AutoCompletePatient(String name)
         {
-            var rawData = await _patientRepository.AutoComplete(name);
+            var rawData = await _patientRepository.AutoCompletePatient(name);
 
             var patients = rawData
-                .Select(p => p.new PatientListReturnDTO
+                .Select(p => new PatientListReturnDTO
                 {
                     Id = p.Id,
                     Name = p.Name,

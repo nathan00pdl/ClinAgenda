@@ -1,3 +1,5 @@
+using ClinAgenda.Application.DTOs.Doctor;
+
 namespace ClinAgenda.Core.Interfaces
 {
     public interface IDoctorRepository
@@ -6,7 +8,7 @@ namespace ClinAgenda.Core.Interfaces
         Task<IEnumerable<DoctorListDTO>> GetDoctorsByIdAsync(int id);
         Task<IEnumerable<SpecialtyDoctorDTO>> GetDoctorSpecialtiesAsync(int[] doctorIds);
         Task<int> InsertDoctorAsync(DoctorInsertDTO doctorInsertDTO);
-        Task<bool> UpdateDoctorAsync(DoctorDTO doctorDTO)
-        Task<int> DeleteByDoctorIdAsync(int id);
+        Task<bool> UpdateDoctorAsync(DoctorDTO doctorDTO);
+        Task<int> DeleteDoctorAsync(int id);
     }
 }

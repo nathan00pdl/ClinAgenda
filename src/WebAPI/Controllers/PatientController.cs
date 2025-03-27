@@ -1,3 +1,4 @@
+using ClinAgenda.Application.DTOs.Patient;
 using ClinAgenda.Application.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,11 +18,11 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GetPatientsAsync([FromQuery] String? name, [FromQuery] String? documentNumber, [FromQuery] int? statusId, [FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
+        public async Task<IActionResult> GetAllPatient([FromQuery] String? name, [FromQuery] String? documentNumber, [FromQuery] int? statusId, [FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
         {
             try
             {
-                var result = await _patientUseCase.GetPatientsAsync(name, documentNumber, statusId, itemsPerPage, page);
+                var result = await _patientUseCase.GetAllPatientAsync(name, documentNumber, statusId, itemsPerPage, page);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -31,7 +32,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("listById/{id}")]
-        public async Task<IActionResult> GetPatientByIdAsync(int id)
+        public async Task<IActionResult> GetPatientById(int id)
         {
             try
             {
@@ -47,7 +48,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpPost("insert")]
-        public async Task<IActionResult> CreatePatientAsync([FromBody] PatientInsertDTO patient)
+        public async Task<IActionResult> CreatePatient([FromBody] PatientInsertDTO patient)
         {
             try
             {

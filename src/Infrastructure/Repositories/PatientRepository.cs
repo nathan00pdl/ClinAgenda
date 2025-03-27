@@ -15,7 +15,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = connection;
         }
 
-        public async Task<(int total, IEnumerable<PatientListDTO> patient)> GetPatientsAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
+        public async Task<(int total, IEnumerable<PatientListDTO> patient)> GetAllPatientAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
         {
             var queryBase = new StringBuilder(@"     
                 FROM PATIENT P
@@ -111,7 +111,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return rowsAffected > 0;
         }
 
-        public async Task<int> DeleteByPatientIdAsync(int id)
+        public async Task<int> DeletePatientAsync(int id)
         {
             String query = "DELETE FROM Patient WHERE ID = @Id";
 
