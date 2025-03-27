@@ -14,9 +14,9 @@ namespace ClinAgenda.Core.Interfaces
 {
     public interface IStatusRepository
     {
-        Task<StatusDTO> GetByIdAsync(int Id);
+        Task<(int total, IEnumerable<StatusDTO> specialtys)> GetAllStatusAsync(int? itemsPerPage, int? page);
+        Task<StatusDTO> GetStatusByIdAsync(int Id);
         Task<int> InsertStatusAsync(StatusInsertDTO statusInsertDTO);
         Task<int> DeleteStatusAsync(int id);
-        Task<(int total, IEnumerable<StatusDTO> specialtys)> GetAllAsync(int? itemsPerPage, int? page);
     }
 }
