@@ -117,7 +117,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                 VALUES (@Name, @StatusId);
                 SELECT LAST_INSERT_ID();";
 
-                return await _connection.ExecuteScalarAsync<int>(query, doctor);
+                return await _connection.ExecuteScalarAsync<int>(query, doctorInsertDTO);
         }
 
         public async Task<bool> UpdateDoctorAsync(DoctorDTO doctorDTO)
@@ -128,7 +128,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                     StatusId = @StatusId
                 WHERE Id = @Id";
 
-            var rowsAffected = await _connection.ExecuteAsync(query, doctor);
+            var rowsAffected = await _connection.ExecuteAsync(query, doctorDTO);
             return rowsAffected > 0;
         }
 
