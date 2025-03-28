@@ -1,6 +1,7 @@
 using System.Text;
 using ClinAgenda.Application.DTOs;
 using ClinAgenda.Application.DTOs.Appointment;
+using ClinAgenda.Application.DTOs.Patient;
 using ClinAgenda.Core.Interfaces;
 using Dapper;
 using MySql.Data.MySqlClient;
@@ -81,12 +82,27 @@ namespace ClinAgenda.Infrastructure.Repositories
 
         public async Task<int> InsertAppointmentAsync(AppointmentDTO appointmentDTO)
         {
-            throw new NotImplementedException();
+            string query = @"
+            INSERT INTO Appointment (patientId, doctorId, specialtyId, appointmentDate, observation)
+            VALUES (@patientId, @doctorId, @specialtyId, @appointmentDate, @observation);
+            SELECT LAST_INSERT_ID();";
+
+            return await _connection.ExecuteScalarAsync<int>(query, appointmentDTO);
         }
 
         public async Task<bool> UpdateAppointmentAsync(AppointmentInsertDTO appointmentInsertDTO)
         {
-            throw new NotImplementedException();
+            string query = @"
+                UPDATE Appointment SET 
+                    patientId = @PatientId,
+                    doctorId = @DoctorId,
+                    specialtyId = @SpecialtyId,
+                    appointmentDate = @AppointmentDate,
+                    observation = @Observation
+                WHERE Id = @Id;";
+            
+            int rowsAffected = await _connection.ExecuteAsync(query, appointmentInsertDTO);
+            return rowsAffected > 0;
         }
     }
 }
