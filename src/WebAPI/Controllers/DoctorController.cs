@@ -105,7 +105,7 @@ namespace ClinAgenda.WebAPI.Controllers
             try
             {
                 var doctorInfo = await _doctorUseCase.GetDoctorByIdAsync(id);
-                var appointment = await _appointmentUseCase.GetAllAppointmentAync(null, doctorName: ((DoctorDTO)doctorInfo).Name, null, 1, 1);
+                var appointment = await _appointmentUseCase.GetAllAppointmentAync(null, doctorName: doctorInfo.Name, null, 1, 1);
                 
                 if (appointment.Total > 0) 
                 {

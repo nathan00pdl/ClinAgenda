@@ -56,38 +56,35 @@ namespace ClinAgenda.Application.UseCases
             };
         }
 
-        public async Task<object> GetDoctorByIdAsync(int id)
+        public async Task<DoctorListReturnDTO> GetDoctorByIdAsync(int id)
         {
             var rawData = await _doctorRepository.GetDoctorByIdAsync(id);
 
-            var result = new
-            {
-                item = rawData
-                    .GroupBy(item => item.Id)
-                    .Select(group => new
-                    {
-                        id = group.Key,
-                        name = group.First().Name,
-                        specialty = group
-                            .Select(s => new
-                            {
-                                id = s.SpecialtyId,
-                                name = s.SpecialtyName
-                            })
-                            .ToList(),
-                        status = new
-                        {
-                            id = group.First().StatusId,
-                            name = group.First().StatusName
-                        }
-                    })
-                .ToList()
-            };
+            List<DoctorListReturnDTO> infoDoctor = new List<DoctorListReturnDTO>();
 
-            return new
+            foreach (var group in rawData.GroupBy(item => item.Id))
             {
-                item = result.item
-            };
+                DoctorListReturnDTO doctorListReturnDTO = new DoctorListReturnDTO
+                {
+                    Id = group.Key,
+                    Name = group.First().Name,
+                    Specialty = group.Select(s => new SpecialtyDTO
+                    {
+                        Id = s.SpecialtyId,
+                        Name = s.SpecialtyName
+                    }).ToList(),
+
+                    Status = new StatusDTO
+                    {
+                        Id = group.First().StatusId,
+                        Name = group.First().StatusName
+                    }
+                };
+
+                infoDoctor.Add(doctorListReturnDTO);
+            }
+
+            return infoDoctor.First();
         }
 
         public async Task<int> CreateDoctorAsync(DoctorInsertDTO doctorInsertDTO)
