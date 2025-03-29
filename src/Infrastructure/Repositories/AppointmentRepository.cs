@@ -104,5 +104,12 @@ namespace ClinAgenda.Infrastructure.Repositories
             int rowsAffected = await _connection.ExecuteAsync(query, appointmentInsertDTO);
             return rowsAffected > 0;
         }
+
+        public async Task<int> DeleteAppointmentAsync(int id)
+        {
+            string query = "DELETE FROM Appointment WHERE ID = @AppointmentId";
+            
+            return await _connection.ExecuteAsync(query, new { AppointmentId = id });
+        }
     }
 }

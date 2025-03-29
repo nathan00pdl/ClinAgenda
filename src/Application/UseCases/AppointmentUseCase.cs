@@ -80,5 +80,11 @@ namespace ClinAgenda.Application.UseCases
 
             return await _appointmentRepository.UpdateAppointmentAsync(updatedPatient);
         }
+
+        public async Task<bool> DeleteAppointmentAsync(int id)
+        {
+            var rowsAffected = await _appointmentRepository.DeleteAppointmentAsync(id);
+            return rowsAffected > 0;
+        }
     }
 }
