@@ -16,7 +16,7 @@ namespace ClinAgenda.Application.UseCases
             _appointmentRepository = appointmentRepository;
         }
 
-        public async Task<AppointmentResponseDTO> GetAllAppointmentAync(string? patientName, string? doctorName, int? specialtyId, int itemsPerPage, int page)
+        public async Task<AppointmentResponseDTO> GetAllAppointmentAync(String? patientName, String? doctorName, int? specialtyId, int itemsPerPage, int page)
         {
 
             var (total, rawData) = await _appointmentRepository.GetAllAppointmentAync(patientName, doctorName, specialtyId, itemsPerPage, page);

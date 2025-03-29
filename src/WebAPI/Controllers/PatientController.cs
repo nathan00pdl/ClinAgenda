@@ -98,7 +98,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteAppointment(int id)
+        public async Task<IActionResult> DeletePatient(int id)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace ClinAgenda.WebAPI.Controllers
                 
                 if (appointment.Total > 0) 
                 {
-                    return NotFound($"Erro Deleting, Patient with Appointment!");
+                    return NotFound($"Error Deleting, Patient with Appointment!");
                 }
                 
                 var success = await _patientUseCase.DeletePatientASync(id);

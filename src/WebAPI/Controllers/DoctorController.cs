@@ -11,12 +11,14 @@ namespace ClinAgenda.WebAPI.Controllers
         private readonly DoctorUseCase _doctorUseCase;
         private readonly StatusUseCase _statusUseCase;
         private readonly SpecialtyUseCase _specialtyUseCase;
+        private readonly AppointmentUseCase _appointmentUseCase;
 
-        public DoctorController(DoctorUseCase doctorUseCase, StatusUseCase statusUseCase, SpecialtyUseCase specialtyUseCase)
+        public DoctorController(DoctorUseCase doctorUseCase, StatusUseCase statusUseCase, SpecialtyUseCase specialtyUseCase, AppointmentUseCase appointmentService)
         {
             _doctorUseCase = doctorUseCase;
             _statusUseCase = statusUseCase;
             _specialtyUseCase = specialtyUseCase;
+            _appointmentUseCase = appointmentService;
         }
 
         [HttpGet("list")]
@@ -95,6 +97,33 @@ namespace ClinAgenda.WebAPI.Controllers
             var infosDoctorUpdate = await _doctorUseCase.GetDoctorByIdAsync(id);
             return Ok(infosDoctorUpdate);
 
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteDoctor(int id)
+        {
+            try
+            {
+                var doctorInfo = await _doctorUseCase.GetDoctorByIdAsync(id);
+                var appointment = await _appointmentUseCase.GetAllAppointmentAync(null, doctorName: ((DoctorDTO)doctorInfo).Name, null, 1, 1);
+                
+                if (appointment.Total > 0) 
+                {
+                    return NotFound($"Erro Deleting, Doctor with Appointment!");
+                }
+                
+                var success = await _doctorUseCase.DeleteDoctorASync(id);
+                if (!success)
+                {
+                    return NotFound($"Doctor with ID {id} Not Found!");
+                }
+
+                return Ok("Doctor Deleted Successfully"); 
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

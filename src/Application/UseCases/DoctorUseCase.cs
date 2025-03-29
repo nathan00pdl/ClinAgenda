@@ -128,5 +128,11 @@ namespace ClinAgenda.Application.UseCases
 
             return true;
         }
+
+        public async Task<bool> DeleteDoctorASync(int id)
+        {
+            var rowsAffected = await _doctorRepository.DeleteDoctorAsync(id);
+            return rowsAffected > 0;
+        }
     }
 }
