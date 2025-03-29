@@ -26,6 +26,9 @@ builder.Services.AddScoped<DoctorUseCase>();
 
 builder.Services.AddScoped<IDoctorSpecialtyRepository, DoctorSpecialtyRepository>();
 
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<AppointmentUseCase>();
+
 
 var app = builder.Build();
 
