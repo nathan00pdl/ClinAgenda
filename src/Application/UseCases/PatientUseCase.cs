@@ -63,9 +63,9 @@ namespace ClinAgenda.Application.UseCases
             return isUpdated;
         }
 
-        public async Task<object?> AutoCompletePatient(String name)
+        public async Task<object?> AutoCompletePatientAsync(String name)
         {
-            var rawData = await _patientRepository.AutoCompletePatient(name);
+            var rawData = await _patientRepository.AutoCompletePatientAsync(name);
 
             var patients = rawData
                 .Select(p => new PatientListReturnDTO

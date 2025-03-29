@@ -73,7 +73,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdatePatientAsync(int id, [FromBody] PatientInsertDTO patientInsertDTO)
+        public async Task<IActionResult> UpdatePatient(int id, [FromBody] PatientInsertDTO patientInsertDTO)
         {
             try
             {
@@ -95,11 +95,11 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("autocomplete")]
-        public async Task<IActionResult> AutoComplete([FromQuery] string? name)
+        public async Task<IActionResult> AutoCompletePatient([FromQuery] string? name)
         {
             try
             {
-                var result = await _patientUseCase.AutoCompletePatient(name ?? string.Empty);
+                var result = await _patientUseCase.AutoCompletePatientAsync(name ?? string.Empty);
                 return Ok(result);
             }
             catch (Exception ex)

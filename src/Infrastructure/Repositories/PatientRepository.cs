@@ -121,7 +121,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return rowsAffected;
         }
 
-        public async Task<IEnumerable<PatientListDTO>> AutoCompletePatient(String name)
+        public async Task<IEnumerable<PatientListDTO>> AutoCompletePatientAsync(String name)
         {
             var queryBase = new StringBuilder(@"
                 FROM PATIENT P 
