@@ -18,11 +18,11 @@ namespace ClinAgenda.Application.UseCases
             _specialtyRepository = specialtyRepository;
         }
 
-        public async Task<object> GetDoctorAsync(String? name, int? specialtyId, int? statusId, int itemsPerPage, int page)
+        public async Task<object> GetAllDoctorAsync(String? name, int? specialtyId, int? statusId, int itemsPerPage, int page)
         {
             int offset = (page - 1) * itemsPerPage;
 
-            var doctors = (await _doctorRepository.GetDoctorAsync(name, specialtyId, statusId, offset, itemsPerPage)).ToList();
+            var doctors = (await _doctorRepository.GetAllDoctorAsync(name, specialtyId, statusId, offset, itemsPerPage)).ToList();
             if (!doctors.Any()) return new { total = 0, items = new List<DoctorListReturnDTO>() };
 
             var doctorIds = doctors.Select(d => d.Id).ToArray();

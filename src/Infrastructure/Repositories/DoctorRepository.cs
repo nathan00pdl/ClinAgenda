@@ -16,7 +16,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = mySqlConnection;
         }
 
-        public async Task<IEnumerable<DoctorListDTO>> GetDoctorAsync(string? name, int? specialtyId, int? statusId, int offset, int itemsPerPage)
+        public async Task<IEnumerable<DoctorListDTO>> GetAllDoctorAsync(string? name, int? specialtyId, int? statusId, int offset, int itemsPerPage)
         {
             var innerJoins = new StringBuilder(@"
                 FROM DOCTOR D
