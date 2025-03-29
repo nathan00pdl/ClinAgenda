@@ -1,6 +1,7 @@
 using ClinAgenda.Application.DTOs.Patient;
 using ClinAgenda.Application.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using ZstdSharp.Unsafe;
 
 namespace ClinAgenda.WebAPI.Controllers
 {
@@ -10,6 +11,7 @@ namespace ClinAgenda.WebAPI.Controllers
     {
         private readonly PatientUseCase _patientUseCase;
         private readonly StatusUseCase _statusUseCase;
+        private readonly AppointmentUseCase _appointmentUseCase;
 
         public PatientController(PatientUseCase patientService, StatusUseCase statusService)
         {
@@ -91,6 +93,33 @@ namespace ClinAgenda.WebAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"{ex.Message}");
+            }
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteAppointment(int id)
+        {
+            try
+            {
+                var patientInfo = await _patientUseCase.GetPatientByIdAsync(id);
+                var appointment = await _appointmentUseCase.GetAllAppointmentAync(patientName: patientInfo.Name, null, null, 1, 1);
+                
+                if (appointment.Total > 0) 
+                {
+                    return NotFound($"Erro Deleting, Patient with Appointment!");
+                }
+                
+                var success = await _patientUseCase.DeletePatientASync(id);
+                if (!success)
+                {
+                    return NotFound($"Patient with ID {id} Not Found!");
+                }
+
+                return Ok("Patient Deleted Successfully"); 
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
 

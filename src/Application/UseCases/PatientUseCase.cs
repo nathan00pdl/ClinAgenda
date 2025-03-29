@@ -63,6 +63,12 @@ namespace ClinAgenda.Application.UseCases
             return isUpdated;
         }
 
+        public async Task<bool> DeletePatientASync(int id)
+        {
+            var rowsAffected = await _patientRepository.DeletePatientAsync(id);
+            return rowsAffected > 0;
+        }
+
         public async Task<object?> AutoCompletePatientAsync(String name)
         {
             var rawData = await _patientRepository.AutoCompletePatientAsync(name);
