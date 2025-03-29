@@ -22,7 +22,7 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GettAllAppointment([FromBody] String? patientName, [FromBody] String? doctorName, [FromBody] int? specialtyId, [FromBody] int itemsPerPage=10, [FromBody] int page=1)
+        public async Task<IActionResult> GettAllAppointment([FromQuery] String? patientName, [FromQuery] String? doctorName, [FromQuery] int? specialtyId, [FromQuery] int itemsPerPage=10, [FromQuery] int page=1)
         {
             try
             {
