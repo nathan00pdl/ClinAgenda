@@ -13,7 +13,7 @@ namespace ClinAgenda.Application.UseCases
             _statusRepository = statusRepository; 
         }
 
-        public async Task<object> GetStatusAsync(int itemsPerPage, int page)
+        public async Task<object> GetAllStatusAsync(int itemsPerPage, int page)
         {
             var (total, rawData) = await _statusRepository.GetAllStatusAsync(itemsPerPage, page);
 
