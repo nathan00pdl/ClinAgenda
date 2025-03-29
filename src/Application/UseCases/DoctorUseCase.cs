@@ -100,7 +100,7 @@ namespace ClinAgenda.Application.UseCases
                 SpecialtyId = doctorInsertDTO.Specialty
             };
 
-            await _doctorSpecialtyRepository.InsertAsync(doctor_specialities);
+            await _doctorSpecialtyRepository.InsertDoctorSpecialtyAsync(doctor_specialities);
 
             return newDoctorId;
         }
@@ -116,7 +116,7 @@ namespace ClinAgenda.Application.UseCases
 
             await _doctorRepository.UpdateDoctorAsync(doctorToUpdate);
 
-            await _doctorSpecialtyRepository.DeleteAsync(id);
+            await _doctorSpecialtyRepository.DeleteDoctorSpecialtyAsync(id);
 
             var doctorSpecialties = new DoctorSpecialtyDTO
             {
@@ -124,7 +124,7 @@ namespace ClinAgenda.Application.UseCases
                 SpecialtyId = doctorInsertDTO.Specialty
             };
 
-            await _doctorSpecialtyRepository.InsertAsync(doctorSpecialties);
+            await _doctorSpecialtyRepository.InsertDoctorSpecialtyAsync(doctorSpecialties);
 
             return true;
         }

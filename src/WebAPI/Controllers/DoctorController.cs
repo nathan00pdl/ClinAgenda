@@ -66,18 +66,18 @@ namespace ClinAgenda.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateDoctorAsync(int id, [FromBody] DoctorInsertDTO doctorInsertDTO)
+        public async Task<IActionResult> UpdateDoctor(int id, [FromBody] DoctorInsertDTO doctorInsertDTO)
         {
             if (doctorInsertDTO == null) return BadRequest();
 
             var hasStatus = await _statusUseCase.GetStatusByIdAsync(doctorInsertDTO.StatusId);
             if (hasStatus == null)
-                return BadRequest($"O status com ID {doctorInsertDTO.StatusId} não existe.");
+                return BadRequest($"The Status with ID {doctorInsertDTO.StatusId} Does Not Exist.");
 
             var specialties = await _specialtyUseCase.GetSpecialtiesByIds(doctorInsertDTO.Specialty);
 
@@ -90,7 +90,7 @@ namespace ClinAgenda.WebAPI.Controllers
 
             bool updated = await _doctorUseCase.UpdateDoctorAsync(id, doctorInsertDTO);
 
-            if (!updated) return NotFound("Doutor não encontrado.");
+            if (!updated) return NotFound("Doctor Not Found.");
 
             var infosDoctorUpdate = await _doctorUseCase.GetDoctorByIdAsync(id);
             return Ok(infosDoctorUpdate);

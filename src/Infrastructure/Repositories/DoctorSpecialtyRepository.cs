@@ -14,7 +14,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = mySqlConnection;
         }
 
-        public async Task InsertAsync(DoctorSpecialtyDTO doctorSpecialtyDTO) 
+        public async Task InsertDoctorSpecialtyAsync(DoctorSpecialtyDTO doctorSpecialtyDTO) 
         {
             String query = @"
                 INSERT INTO DOCTOR_SPECIALTY (DoctorId, SpecialtyId)
@@ -29,7 +29,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             await _connection.ExecuteAsync(query, parameters);
         }
 
-        public async Task DeleteAsync(int doctorId)
+        public async Task DeleteDoctorSpecialtyAsync(int doctorId)
         {
             String query = "DELETE FROM doctor_specialty WHERE DoctorId = @DoctorId";
             await _connection.ExecuteAsync(query, new { DoctorId = doctorId });
