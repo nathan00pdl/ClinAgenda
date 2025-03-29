@@ -19,7 +19,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = mySqlConnection;
         }
 
-        public async Task<(int total, IEnumerable<AppointmentListDTO> appointment)> GetAllppointmentAync(string? patientName, string? doctorName, int? specialtyId, int itemsPerPage, int page)
+        public async Task<(int total, IEnumerable<AppointmentListDTO> appointment)> GetAllAppointmentAync(string? patientName, string? doctorName, int? specialtyId, int itemsPerPage, int page)
         {
             var queryBase = new StringBuilder(@"
                 FROM Appointment A 
