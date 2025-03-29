@@ -16,11 +16,11 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GetSpecialty([FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
+        public async Task<IActionResult> GetAllSpecialty([FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
         {
             try
             {
-                var specialty = await _specialtyUsecase.GetSpecialtyAsync(itemsPerPage, page);
+                var specialty = await _specialtyUsecase.GetAllSpecialtyAsync(itemsPerPage, page);
                 return Ok(specialty);
             }
             catch (Exception ex)

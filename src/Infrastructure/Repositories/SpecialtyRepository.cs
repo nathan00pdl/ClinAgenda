@@ -40,21 +40,6 @@ namespace ClinAgenda.Infrastructure.Repositories
             return (total, specialtys);
         }
 
-        public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> specialtiesId)
-        {
-            var query = @"
-                SELECT 
-                    S.ID, 
-                    S.NAME,
-                    S.SCHEDULEDURATION 
-                FROM SPECIALTY S
-                WHERE S.ID IN @SPECIALTIESID";
-
-            var parameters = new { SpecialtiesID = specialtiesId };
-
-            return await _connection.QueryAsync<SpecialtyDTO>(query, parameters);
-        }
-
         public async Task<SpecialtyDTO> GetSpecialtyByIdAsync(int id)
         {
             const String query = @"
@@ -68,6 +53,21 @@ namespace ClinAgenda.Infrastructure.Repositories
             var specialty = await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, new { Id = id });
 
             return specialty ?? throw new InvalidOperationException("Specialty Not Found.");
+        }
+
+        public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> specialtiesId)
+        {
+            var query = @"
+                SELECT 
+                    S.ID, 
+                    S.NAME,
+                    S.SCHEDULEDURATION 
+                FROM SPECIALTY S
+                WHERE S.ID IN @SPECIALTIESID";
+
+            var parameters = new { SpecialtiesID = specialtiesId };
+
+            return await _connection.QueryAsync<SpecialtyDTO>(query, parameters);
         }
 
         public async Task<int> InsertSpecialtyAsync(SpecialtyInsertDTO specialtyInsertDTO)

@@ -12,7 +12,7 @@ namespace ClinAgenda.Application.UseCases
             _specialtyRepository = specialtyRepository;
         }
 
-        public async Task<object> GetSpecialtyAsync(int itemsPerPage, int page)
+        public async Task<object> GetAllSpecialtyAsync(int itemsPerPage, int page)
         {
             var (total, rawData) = await _specialtyRepository.GetAllSpecialtyAsync(itemsPerPage, page);
 
