@@ -4,7 +4,7 @@ namespace ClinAgenda.Core.Interfaces
 {
     public interface IDoctorSpecialtyRepository
     {
-        Task InsertDoctorSpecialtyAsync(DoctorSpecialtyDTO doctorSpecialtyDTO); 
-        Task DeleteDoctorSpecialtyAsync(int doctorId);
+        Task <int> InsertDoctorSpecialtyAsync(DoctorSpecialtyDTO doctorSpecialtyDTO); 
+        Task <int> DeleteDoctorSpecialtyAsync(int id);
     }
 }

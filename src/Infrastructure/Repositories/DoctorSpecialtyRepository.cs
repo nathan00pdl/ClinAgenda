@@ -14,11 +14,14 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = mySqlConnection;
         }
 
-        public async Task InsertDoctorSpecialtyAsync(DoctorSpecialtyDTO doctorSpecialtyDTO) 
+        public async Task<int> InsertDoctorSpecialtyAsync(DoctorSpecialtyDTO doctorSpecialtyDTO) 
         {
             String query = @"
                 INSERT INTO DOCTOR_SPECIALTY (DoctorId, SpecialtyId)
-                VALUES (@DoctorId, @SpecialtyId);";
+                VALUES (@DoctorId, @SpecialtyId);
+
+                SELECT LAST_INSERT_ID();
+            ";
 
             var parameters = doctorSpecialtyDTO.SpecialtyId.Select(specialtyId => new 
                 {
@@ -26,13 +29,15 @@ namespace ClinAgenda.Infrastructure.Repositories
                     SpecialtyId = specialtyId
                 });
 
-            await _connection.ExecuteAsync(query, parameters);
+            return await _connection.ExecuteAsync(query, parameters);
         }
 
-        public async Task DeleteDoctorSpecialtyAsync(int doctorId)
+        public async Task<int> DeleteDoctorSpecialtyAsync(int id)
         {
-            String query = "DELETE FROM doctor_specialty WHERE DoctorId = @DoctorId";
-            await _connection.ExecuteAsync(query, new { DoctorId = doctorId });
+            String query = "DELETE FROM doctor_specialty WHERE DoctorId = @Id";
+            var parameters = new { Id = id };
+
+            return await _connection.ExecuteAsync(query, parameters);
         }
     }
 }
