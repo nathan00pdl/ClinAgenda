@@ -33,24 +33,26 @@ namespace ClinAgenda.Application.UseCases
                 })
                 .ToList();
 
-            return new { total, items = patients };
+            return new 
+            { 
+                total, 
+                items = patients 
+            };
         }
 
         public async Task<PatientDTO> GetPatientByIdAsync(int id)
         {
-            var patient = await _patientRepository.GetPatientByIdAsync(id) ?? throw new KeyNotFoundException("Patient Not Found");
-            return patient;
+            return await _patientRepository.GetPatientByIdAsync(id) ?? throw new KeyNotFoundException($"Patient with ID {id} was Not Found");
         }
 
         public async Task<int> CreatePatientAsync(PatientInsertDTO patientInsertDTO) 
         {
-            var newPatient = await _patientRepository.InsertPatientAsync(patientInsertDTO);
-            return newPatient;
+            return await _patientRepository.InsertPatientAsync(patientInsertDTO);
         }
 
-        public async Task<bool> UpdatePatientAsync(int patientId, PatientInsertDTO patientInsertDTO)
+        public async Task<bool> UpdatePatientAsync(int id, PatientInsertDTO patientInsertDTO)
         {
-            var existingPatient = await _patientRepository.GetPatientByIdAsync(patientId) ?? throw new KeyNotFoundException("Patient Not Found");
+            var existingPatient = await _patientRepository.GetPatientByIdAsync(id) ?? throw new KeyNotFoundException($"Patient with ID {id} was Not Found");
 
             existingPatient.Name = patientInsertDTO.Name;
             existingPatient.PhoneNumber = patientInsertDTO.PhoneNumber;
@@ -58,9 +60,7 @@ namespace ClinAgenda.Application.UseCases
             existingPatient.StatusId = patientInsertDTO.StatusId;
             existingPatient.BirthDate = patientInsertDTO.BirthDate;
 
-            var isUpdated = await _patientRepository.UpdatePatientAsync(existingPatient);
-
-            return isUpdated;
+            return await _patientRepository.UpdatePatientAsync(existingPatient);
         }
 
         public async Task<bool> DeletePatientASync(int id)
