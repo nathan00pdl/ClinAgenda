@@ -18,10 +18,9 @@ namespace ClinAgenda.Infrastructure.Repositories
         public async Task<(int total, IEnumerable<SpecialtyDTO> specialtys)> GetAllSpecialtyAsync(int? itemsPerPage, int? page)
         {
             var queryBase = new StringBuilder(@"FROM SPECIALTY S WHERE 1 = 1");
-
             var parameters = new DynamicParameters();
-
             var countQuery = $"SELECT COUNT(DISTINCT S.ID) {queryBase}";
+            
             int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
 
             var dataQuery = $@"
@@ -50,12 +49,10 @@ namespace ClinAgenda.Infrastructure.Repositories
                 FROM SPECIALTY
                 WHERE ID = @Id";
 
-            var specialty = await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, new { Id = id });
-
-            return specialty ?? throw new InvalidOperationException("Specialty Not Found.");
+            return await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, new { Id = id });
         }
 
-        public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> specialtiesId)
+        public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> id)
         {
             var query = @"
                 SELECT 
@@ -63,9 +60,9 @@ namespace ClinAgenda.Infrastructure.Repositories
                     S.NAME,
                     S.SCHEDULEDURATION 
                 FROM SPECIALTY S
-                WHERE S.ID IN @SPECIALTIESID";
+                WHERE S.ID IN @ID";
 
-            var parameters = new { SpecialtiesID = specialtiesId };
+            var parameters = new { ID = id };
 
             return await _connection.QueryAsync<SpecialtyDTO>(query, parameters);
         }
@@ -75,6 +72,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             String query = @"
                 INSERT INTO SPECIALTY (NAME, SCHEDULEDURATION) 
                 VALUES (@Name, @Scheduleduration);
+
                 SELECT LAST_INSERT_ID();";
                 
             return await _connection.ExecuteScalarAsync<int>(query, specialtyInsertDTO);
@@ -82,16 +80,10 @@ namespace ClinAgenda.Infrastructure.Repositories
 
         public async Task<int> DeleteSpecialtyAsync(int id)
         {
-            String query = @"
-                DELETE FROM SPECIALTY
-                WHERE ID = @Id";
-
+            String query = @"DELETE FROM SPECIALTY WHERE ID = @Id";
             var parameters = new { Id = id };
 
-            var rowsAffected = await _connection.ExecuteAsync(query, parameters);
-
-            return rowsAffected;
-
+            return await _connection.ExecuteAsync(query, parameters);
         }
     }
 }
