@@ -23,7 +23,7 @@ namespace ClinAgenda.Application.UseCases
             int offset = (page - 1) * itemsPerPage;
 
             var doctors = (await _doctorRepository.GetAllDoctorAsync(name, specialtyId, statusId, offset, itemsPerPage)).ToList();
-            if (!doctors.Any()) return new { total = 0, items = new List<DoctorListReturnDTO>() };
+            if (doctors.Count == 0) return new { total = 0, items = new List<DoctorListReturnDTO>() };
 
             var doctorIds = doctors.Select(d => d.Id).ToArray();
             
@@ -91,13 +91,13 @@ namespace ClinAgenda.Application.UseCases
         {
             var newDoctorId = await _doctorRepository.InsertDoctorAsync(doctorInsertDTO);
 
-            var doctor_specialities = new DoctorSpecialtyDTO
+            var doctorSpecialties = new DoctorSpecialtyDTO
             {
                 DoctorId = newDoctorId,
                 SpecialtyId = doctorInsertDTO.Specialty
             };
 
-            await _doctorSpecialtyRepository.InsertDoctorSpecialtyAsync(doctor_specialities);
+            await _doctorSpecialtyRepository.InsertDoctorSpecialtyAsync(doctorSpecialties);
 
             return newDoctorId;
         }
