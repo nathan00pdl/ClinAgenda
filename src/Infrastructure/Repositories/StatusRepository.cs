@@ -26,7 +26,7 @@ namespace ClinAgenda.Infrastructure.Repositories
         public async Task<(int total, IEnumerable<StatusDTO> specialtys)> GetAllStatusAsync(int? itemsPerPage, int? page)
         {
             var queryBase = new StringBuilder(@"
-                FROM STATUS S WHERE 1 = 1" // "1 = 1" is used to facilitate the addition of dynamic filters
+                FROM STATUS S WHERE 1 = 1 " // "1 = 1" is used to facilitate the addition of dynamic filters
                 ); 
 
             var parameters = new DynamicParameters(); 

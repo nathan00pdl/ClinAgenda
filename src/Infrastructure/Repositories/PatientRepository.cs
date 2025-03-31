@@ -20,7 +20,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             var queryBase = new StringBuilder(@"     
                 FROM PATIENT P
                 INNER JOIN STATUS S ON S.ID = P.STATUSID
-                WHERE 1 = 1"
+                WHERE 1 = 1 "
             );
 
             var parameters = new DynamicParameters();
@@ -81,9 +81,8 @@ namespace ClinAgenda.Infrastructure.Repositories
                 WHERE ID = @ID";
 
             var parameters = new { Id = id };   
-            var patient = await _connection.QueryFirstOrDefaultAsync<PatientDTO>(query, parameters);
 
-            return patient ?? throw new InvalidOperationException("Patient Not Found.");
+            return await _connection.QueryFirstOrDefaultAsync<PatientDTO>(query, parameters);
         }
 
         public async Task<int> InsertPatientAsync(PatientInsertDTO patientInsertDTO) 
@@ -114,11 +113,9 @@ namespace ClinAgenda.Infrastructure.Repositories
         public async Task<int> DeletePatientAsync(int id)
         {
             String query = "DELETE FROM Patient WHERE ID = @Id";
-
             var parameters = new { Id = id };
-            var rowsAffected = await _connection.ExecuteAsync(query, parameters);
 
-            return rowsAffected;
+            return await _connection.ExecuteAsync(query, parameters);
         }
 
         public async Task<IEnumerable<PatientListDTO>> AutoCompletePatientAsync(String name)
@@ -149,9 +146,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                 {queryBase}
                 ORDER BY P.ID";
             
-            var doctors = await _connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
-
-            return doctors;
+            return await _connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
         }
 
     }

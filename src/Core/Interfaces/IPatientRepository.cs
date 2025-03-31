@@ -6,8 +6,8 @@ namespace ClinAgenda.Core.Interfaces
     {
         Task<(int total, IEnumerable<PatientListDTO> patient)> GetAllPatientAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page);
         Task<PatientDTO?> GetPatientByIdAsync(int id);
-        Task<int> InsertPatientAsync(PatientInsertDTO patient);
-        Task<bool> UpdatePatientAsync(PatientDTO patient);
+        Task<int> InsertPatientAsync(PatientInsertDTO patientInsertDTO);
+        Task<bool> UpdatePatientAsync(PatientDTO patientDTO);
         Task<int> DeletePatientAsync(int patientId);
         Task<IEnumerable<PatientListDTO>> AutoCompletePatientAsync(String name);
     }

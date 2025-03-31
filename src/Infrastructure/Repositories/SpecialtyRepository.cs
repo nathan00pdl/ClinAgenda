@@ -17,7 +17,7 @@ namespace ClinAgenda.Infrastructure.Repositories
 
         public async Task<(int total, IEnumerable<SpecialtyDTO> specialtys)> GetAllSpecialtyAsync(int? itemsPerPage, int? page)
         {
-            var queryBase = new StringBuilder(@"FROM SPECIALTY S WHERE 1 = 1");
+            var queryBase = new StringBuilder(@"FROM SPECIALTY S WHERE 1 = 1 ");
             var parameters = new DynamicParameters();
             var countQuery = $"SELECT COUNT(DISTINCT S.ID) {queryBase}";
             
@@ -49,7 +49,9 @@ namespace ClinAgenda.Infrastructure.Repositories
                 FROM SPECIALTY
                 WHERE ID = @Id";
 
-            return await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, new { Id = id });
+            var parameters = new { Id = id };
+
+            return await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, parameters);
         }
 
         public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> id)
@@ -62,7 +64,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                 FROM SPECIALTY S
                 WHERE S.ID IN @ID";
 
-            var parameters = new { ID = id };
+            var parameters = new { Id = id };
 
             return await _connection.QueryAsync<SpecialtyDTO>(query, parameters);
         }
