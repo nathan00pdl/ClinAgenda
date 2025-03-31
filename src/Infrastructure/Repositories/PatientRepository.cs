@@ -90,7 +90,9 @@ namespace ClinAgenda.Infrastructure.Repositories
             String query = @"
                 INSERT INTO Patient (name, phoneNumber, documentNumber, statusId, birthDate) 
                 VALUES (@Name, @PhoneNumber, @DocumentNumber, @StatusId, @BirthDate);
-                SELECT LAST_INSERT_ID();";
+                
+                SELECT LAST_INSERT_ID();
+            ";
 
             return await _connection.ExecuteScalarAsync<int>(query, patientInsertDTO);
         }

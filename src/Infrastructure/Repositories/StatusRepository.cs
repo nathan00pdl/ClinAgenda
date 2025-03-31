@@ -64,7 +64,8 @@ namespace ClinAgenda.Infrastructure.Repositories
                 INSERT INTO STATUS (NAME) 
                 VALUES (@Name);
                 
-                SELECT LAST_INSERT_ID();";
+                SELECT LAST_INSERT_ID();
+            ";
 
             return await _connection.ExecuteScalarAsync<int>(query, statusInsertDTO); // @Name is passed by statusInsertDTO
         }
