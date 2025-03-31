@@ -42,7 +42,7 @@ namespace ClinAgenda.Application.UseCases
 
         public async Task<PatientDTO> GetPatientByIdAsync(int id)
         {
-            return await _patientRepository.GetPatientByIdAsync(id) ?? throw new KeyNotFoundException($"Patient with ID {id} was Not Found");
+            return await _patientRepository.GetPatientByIdAsync(id) ?? throw new KeyNotFoundException($"Patient with ID {id} Not Found");
         }
 
         public async Task<int> CreatePatientAsync(PatientInsertDTO patientInsertDTO) 
@@ -52,7 +52,7 @@ namespace ClinAgenda.Application.UseCases
 
         public async Task<bool> UpdatePatientAsync(int id, PatientInsertDTO patientInsertDTO)
         {
-            var existingPatient = await _patientRepository.GetPatientByIdAsync(id) ?? throw new KeyNotFoundException($"Patient with ID {id} was Not Found");
+            var existingPatient = await _patientRepository.GetPatientByIdAsync(id) ?? throw new KeyNotFoundException($"Patient with ID {id} Not Found");
 
             existingPatient.Name = patientInsertDTO.Name;
             existingPatient.PhoneNumber = patientInsertDTO.PhoneNumber;

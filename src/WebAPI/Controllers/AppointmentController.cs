@@ -13,12 +13,12 @@ namespace ClinAgenda.WebAPI.Controllers
         private readonly DoctorUseCase _doctorUseCase;
         private readonly SpecialtyUseCase _specialtyUseCase;
 
-        public AppointmentController (AppointmentUseCase appointmentUseCase, PatientUseCase patientUseCase, DoctorUseCase doctorUseCase, SpecialtyUseCase specialtyUseCase)
+        public AppointmentController (AppointmentUseCase appointmentService, PatientUseCase patientService, DoctorUseCase doctorService, SpecialtyUseCase specialtyService)
         {
-            _appointmentUseCase = appointmentUseCase;
-            _patientUseCase = patientUseCase;
-            _doctorUseCase = doctorUseCase;
-            _specialtyUseCase = specialtyUseCase;
+            _appointmentUseCase = appointmentService;
+            _patientUseCase = patientService;
+            _doctorUseCase = doctorService;
+            _specialtyUseCase = specialtyService;
         }
 
         [HttpGet("list")]

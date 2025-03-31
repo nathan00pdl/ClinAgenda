@@ -51,7 +51,7 @@ namespace ClinAgenda.Infrastructure.Repositories
 
             var parameters = new { Id = id };
 
-            return await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, parameters) ?? throw new KeyNotFoundException($"Specialty with ID {id} was Not Found.");;
+            return await _connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, parameters) ?? throw new KeyNotFoundException($"Specialty with ID {id} Not Found.");;
         }
 
         public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> id)

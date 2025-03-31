@@ -13,16 +13,16 @@ namespace ClinAgenda.WebAPI.Controllers
         private readonly SpecialtyUseCase _specialtyUseCase;
         private readonly AppointmentUseCase _appointmentUseCase;
 
-        public DoctorController(DoctorUseCase doctorUseCase, StatusUseCase statusUseCase, SpecialtyUseCase specialtyUseCase, AppointmentUseCase appointmentService)
+        public DoctorController(DoctorUseCase doctorService, StatusUseCase statusService, SpecialtyUseCase specialtyService, AppointmentUseCase appointmentService)
         {
-            _doctorUseCase = doctorUseCase;
-            _statusUseCase = statusUseCase;
-            _specialtyUseCase = specialtyUseCase;
+            _doctorUseCase = doctorService;
+            _statusUseCase = statusService;
+            _specialtyUseCase = specialtyService;
             _appointmentUseCase = appointmentService;
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GetAllDoctor([FromQuery] string? name, [FromQuery] int? specialtyId, [FromQuery] int? statusId, [FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
+        public async Task<IActionResult> GetAllDoctor([FromQuery] String? name, [FromQuery] int? specialtyId, [FromQuery] int? statusId, [FromQuery] int itemsPerPage = 10, [FromQuery] int page = 1)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace ClinAgenda.WebAPI.Controllers
                 var notFoundSpecialties = doctorInsertDTO.Specialty.Except(specialties.Select(s => s.Id)).ToList();
                 if (notFoundSpecialties.Any())
                 {
-                    return BadRequest(notFoundSpecialties.Count > 1 ? $"The Specialties with IDs {string.Join(", ", notFoundSpecialties)} Does Not Exist." : $"The Specialty with ID {notFoundSpecialties.First().ToString()} Does Not Exist.");
+                    return BadRequest(notFoundSpecialties.Count > 1 ? $"The Specialties with IDs {String.Join(", ", notFoundSpecialties)} Does Not Exist." : $"The Specialty with ID {notFoundSpecialties.First().ToString()} Does Not Exist.");
                 }
 
                 var createdDoctorId = await _doctorUseCase.CreateDoctorAsync(doctorInsertDTO);
@@ -87,7 +87,7 @@ namespace ClinAgenda.WebAPI.Controllers
 
             if (notFoundSpecialties.Any())
             {
-                return BadRequest(notFoundSpecialties.Count > 1 ? $"The Specialties with IDs {string.Join(", ", notFoundSpecialties)} Does Not Exist" : $"The Specialty with ID {notFoundSpecialties.First().ToString()} Does Not Exist.");
+                return BadRequest(notFoundSpecialties.Count > 1 ? $"The Specialties with IDs {String.Join(", ", notFoundSpecialties)} Does Not Exist" : $"The Specialty with ID {notFoundSpecialties.First().ToString()} Does Not Exist.");
             }
 
             bool updated = await _doctorUseCase.UpdateDoctorAsync(id, doctorInsertDTO);

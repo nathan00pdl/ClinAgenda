@@ -125,11 +125,11 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpGet("autocomplete")]
-        public async Task<IActionResult> AutoCompletePatient([FromQuery] string? name)
+        public async Task<IActionResult> AutoCompletePatient([FromQuery] String? name)
         {
             try
             {
-                var result = await _patientUseCase.AutoCompletePatientAsync(name ?? string.Empty);
+                var result = await _patientUseCase.AutoCompletePatientAsync(name ?? String.Empty);
                 return Ok(result);
             }
             catch (Exception ex)

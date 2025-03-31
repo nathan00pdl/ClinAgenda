@@ -10,9 +10,9 @@ namespace ClinAgenda.WebAPI.Controllers
     {
         private readonly SpecialtyUseCase _specialtyUsecase;
 
-        public SpecialtyController(SpecialtyUseCase service)
+        public SpecialtyController(SpecialtyUseCase SpecialtyService)
         {
-            _specialtyUsecase = service;
+            _specialtyUsecase = SpecialtyService;
         }
 
         [HttpGet("list")]
@@ -64,7 +64,6 @@ namespace ClinAgenda.WebAPI.Controllers
                 }
 
                 var createdSpecialty = await _specialtyUsecase.CreateSpecialtyAsync(specialtyInsertDTO);
-
                 if (!(createdSpecialty > 0))
                 {
                     return StatusCode(500, "Error Creating Specialty.");

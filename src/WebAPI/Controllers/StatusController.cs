@@ -10,9 +10,9 @@ namespace ClinAgenda.WebAPI.Controllers
     {
         private readonly StatusUseCase _statusUseCase;
 
-        public StatusController(StatusUseCase service)
+        public StatusController(StatusUseCase statusService)
         {
-            _statusUseCase = service;
+            _statusUseCase = statusService;
         }
 
         [HttpGet("list")]
@@ -21,7 +21,6 @@ namespace ClinAgenda.WebAPI.Controllers
             try
             {
                 var specialty = await _statusUseCase.GetAllStatusAsync(itemsPerPage, page);
-
                 return Ok(specialty);
             }
             catch (Exception ex)
@@ -36,7 +35,6 @@ namespace ClinAgenda.WebAPI.Controllers
             try
             {
                 var specialty = await _statusUseCase.GetStatusByIdAsync(id);
-
                 if (specialty == null)
                 {
                     return NotFound($"Status with ID {id} Not Found.");

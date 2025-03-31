@@ -57,7 +57,7 @@ namespace ClinAgenda.Application.UseCases
 
         public async Task<AppointmentDTO> GetAppointmentByIdAsync(int id)
         {
-            return await _appointmentRepository.GetAppointmentByIdAsync(id) ?? throw new InvalidOperationException($"Appointment with ID {id} was Not Found.");
+            return await _appointmentRepository.GetAppointmentByIdAsync(id) ?? throw new InvalidOperationException($"Appointment with ID {id} Not Found.");
         }
 
         public async Task<int> CreateAppointmentAsync(AppointmentDTO appointmentDTO)
