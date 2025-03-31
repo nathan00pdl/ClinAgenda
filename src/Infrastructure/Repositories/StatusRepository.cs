@@ -55,7 +55,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             String query = @"SELECT ID, NAME FROM STATUS WHERE ID = @Id";
             var parameters = new { Id = id }; // Creating an anonymous object to avoid SQL injection
 
-            return await _connection.QueryFirstOrDefaultAsync<StatusDTO>(query, parameters);
+            return await _connection.QueryFirstOrDefaultAsync<StatusDTO>(query, parameters) ?? throw new KeyNotFoundException($"Status with ID {id} was not found.");
         }
 
         public async Task<int> InsertStatusAsync(StatusInsertDTO statusInsertDTO)
