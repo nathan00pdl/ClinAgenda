@@ -19,7 +19,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connection = mySqlConnection;
         }
 
-        public async Task<(int total, IEnumerable<AppointmentListDTO> appointment)> GetAllAppointmentAync(string? patientName, string? doctorName, int? specialtyId, int itemsPerPage, int page)
+        public async Task<(int total, IEnumerable<AppointmentListDTO> appointment)> GetAllAppointmentAync(String? patientName, String? doctorName, int? specialtyId, int itemsPerPage, int page)
         {
             var queryBase = new StringBuilder(@"
                 FROM Appointment A 
@@ -48,9 +48,8 @@ namespace ClinAgenda.Infrastructure.Repositories
                 parameters.Add("SpecialtyId", specialtyId.Value);
             }
 
-            var counQuery = $"SELECT COUNT(DISTINCT A.ID) {queryBase}";
-            
-            int total = await _connection.ExecuteScalarAsync<int>(counQuery, parameters);
+            var countQuery = $"SELECT COUNT(DISTINCT A.ID) {queryBase}";
+            int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
 
             var dataQuery = $@"
                 SELECT 
@@ -76,23 +75,26 @@ namespace ClinAgenda.Infrastructure.Repositories
 
         public async Task<AppointmentDTO?> GetAppointmentByIdAsync(int id)
         {
-            string query = "SELECT * FROM Appointment WHERE Id = @Id;";
-            return await _connection.QueryFirstOrDefaultAsync<AppointmentDTO>(query, new { Id = id });
+            String query = "SELECT * FROM Appointment WHERE Id = @Id;";
+            var parameters = new { Id = id };
+
+            return await _connection.QueryFirstOrDefaultAsync<AppointmentDTO>(query, parameters);
         }
 
         public async Task<int> InsertAppointmentAsync(AppointmentDTO appointmentDTO)
         {
-            string query = @"
-            INSERT INTO Appointment (patientId, doctorId, specialtyId, appointmentDate, observation)
-            VALUES (@patientId, @doctorId, @specialtyId, @appointmentDate, @observation);
-            SELECT LAST_INSERT_ID();";
+            String query = @"
+                INSERT INTO Appointment (patientId, doctorId, specialtyId, appointmentDate, observation)
+                VALUES (@patientId, @doctorId, @specialtyId, @appointmentDate, @observation);
+
+                SELECT LAST_INSERT_ID();";
 
             return await _connection.ExecuteScalarAsync<int>(query, appointmentDTO);
         }
 
         public async Task<bool> UpdateAppointmentAsync(AppointmentInsertDTO appointmentInsertDTO)
         {
-            string query = @"
+            String query = @"
                 UPDATE Appointment SET 
                     patientId = @PatientId,
                     doctorId = @DoctorId,
@@ -107,9 +109,10 @@ namespace ClinAgenda.Infrastructure.Repositories
 
         public async Task<int> DeleteAppointmentAsync(int id)
         {
-            string query = "DELETE FROM Appointment WHERE ID = @AppointmentId";
+            String query = "DELETE FROM Appointment WHERE ID = @Id";
+            var parameters = new { Id = id };
             
-            return await _connection.ExecuteAsync(query, new { AppointmentId = id });
+            return await _connection.ExecuteAsync(query, parameters);
         }
     }
 }
