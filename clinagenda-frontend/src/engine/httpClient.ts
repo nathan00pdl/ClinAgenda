@@ -36,10 +36,10 @@ export default async function request<T, R>({
       isError: false,
       data: response.data
     }
-  } catch (error) {
+  } catch (error: any) {
     toastStore.setToast({
       type: 'error',
-      text: error instanceof Error ? error.message : 'Unknown Error'
+      text: error?.response?.data || error?.message || 'Unknown Error'
     })
 
     console.error(`Error in Request [${method}] ${endpoint}`, body)
