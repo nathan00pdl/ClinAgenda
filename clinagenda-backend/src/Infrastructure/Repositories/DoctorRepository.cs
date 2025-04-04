@@ -9,15 +9,18 @@ namespace ClinAgenda.Infrastructure.Repositories
     public class DoctorRepository : IDoctorRepository
     {
 
-        private readonly MySqlConnection _connection;
+        private readonly String _connectionString;
 
-        public DoctorRepository(MySqlConnection mySqlConnection)
+        public DoctorRepository(String connection)
         {
-            _connection = mySqlConnection;
+            _connectionString = connection;
         }
 
         public async Task<IEnumerable<DoctorListDTO>> GetAllDoctorAsync(String? name, int? specialtyId, int? statusId, int offset, int itemsPerPage)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             var queryBase = new StringBuilder(@"
                 FROM DOCTOR D
                 INNER JOIN STATUS S ON S.ID = D.STATUSID 
@@ -58,11 +61,14 @@ namespace ClinAgenda.Infrastructure.Repositories
                 ORDER BY D.ID
                 LIMIT @Limit OFFSET @Offset";
             
-            return await _connection.QueryAsync<DoctorListDTO>(dataQuery.ToString(), parameters);
+            return await connection.QueryAsync<DoctorListDTO>(dataQuery.ToString(), parameters);
         }
 
         public async Task<IEnumerable<DoctorListDTO>> GetDoctorByIdAsync(int id)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             var queryBase = new StringBuilder(@"
                 FROM DOCTOR D
                 LEFT JOIN DOCTOR_SPECIALTY DSPE ON DSPE.DOCTORID = D.ID 
@@ -90,11 +96,14 @@ namespace ClinAgenda.Infrastructure.Repositories
                 {queryBase}
                 ORDER BY D.ID";
 
-                return await _connection.QueryAsync<DoctorListDTO>(dataQuery, parameters);
+                return await connection.QueryAsync<DoctorListDTO>(dataQuery, parameters);
         }
 
         public async Task<IEnumerable<SpecialtyDoctorDTO>> GetDoctorSpecialtiesAsync(int[] doctorIds)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             var query = @"
                 SELECT 
                     DS.DOCTORID AS DOCTORID,
@@ -107,11 +116,14 @@ namespace ClinAgenda.Infrastructure.Repositories
             
             var parameters = new { DoctorIds = doctorIds };
 
-            return await _connection.QueryAsync<SpecialtyDoctorDTO>(query, parameters);
+            return await connection.QueryAsync<SpecialtyDoctorDTO>(query, parameters);
         }
 
         public async Task<int> InsertDoctorAsync(DoctorInsertDTO doctorInsertDTO)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = @"
                 INSERT INTO Doctor (Name, StatusId)
                 VALUES (@Name, @StatusId);
@@ -119,22 +131,28 @@ namespace ClinAgenda.Infrastructure.Repositories
                 SELECT LAST_INSERT_ID();
             ";
 
-            return await _connection.ExecuteScalarAsync<int>(query, doctorInsertDTO);
+            return await connection.ExecuteScalarAsync<int>(query, doctorInsertDTO);
         }
 
         public async Task<bool> UpdateDoctorAsync(DoctorDTO doctorDTO)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = @"UPDATE Doctor SET Name = @Name, StatusId = @StatusId WHERE Id = @Id";
-            var rowsAffected = await _connection.ExecuteAsync(query, doctorDTO);
+            var rowsAffected = await connection.ExecuteAsync(query, doctorDTO);
             return rowsAffected > 0;
         }
 
         public async Task<int> DeleteDoctorAsync(int id)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = "DELETE FROM DOCTOR WHERE ID = @Id";
             var parameters = new { Id = id };
 
-            return await _connection.ExecuteAsync(query, parameters);
+            return await connection.ExecuteAsync(query, parameters);
         }
     }
 }

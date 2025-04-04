@@ -8,15 +8,18 @@ namespace ClinAgenda.Infrastructure.Repositories
 {
     public class PatientRepository : IPatientRepository
     {
-        private readonly MySqlConnection _connection;
+        private readonly String _connectionString;
 
-        public PatientRepository(MySqlConnection connection)
+        public PatientRepository(String connection)
         {
-            _connection = connection;
+            _connectionString = connection;
         }
 
         public async Task<(int total, IEnumerable<PatientListDTO> patient)> GetAllPatientAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             var queryBase = new StringBuilder(@"     
                 FROM PATIENT P
                 INNER JOIN STATUS S ON S.ID = P.STATUSID
@@ -44,7 +47,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             }
 
             var countQuery = $"SELECT COUNT(DISTINCT P.ID) {queryBase}";
-            int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
+            int total = await connection.ExecuteScalarAsync<int>(countQuery, parameters);
 
             var dataQuery = $@"
                 SELECT 
@@ -62,13 +65,16 @@ namespace ClinAgenda.Infrastructure.Repositories
             parameters.Add("Limit", itemsPerPage);
             parameters.Add("Offset", (page - 1) * itemsPerPage);
 
-            var patients = await _connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
+            var patients = await connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
 
             return (total, patients);
         }
 
         public async Task<PatientDTO?> GetPatientByIdAsync(int id)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             const String query = @"
                 SELECT 
                     ID, 
@@ -82,11 +88,14 @@ namespace ClinAgenda.Infrastructure.Repositories
 
             var parameters = new { Id = id };   
 
-            return await _connection.QueryFirstOrDefaultAsync<PatientDTO>(query, parameters);
+            return await connection.QueryFirstOrDefaultAsync<PatientDTO>(query, parameters);
         }
 
         public async Task<int> InsertPatientAsync(PatientInsertDTO patientInsertDTO) 
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = @"
                 INSERT INTO Patient (name, phoneNumber, documentNumber, statusId, birthDate) 
                 VALUES (@Name, @PhoneNumber, @DocumentNumber, @StatusId, @BirthDate);
@@ -94,11 +103,14 @@ namespace ClinAgenda.Infrastructure.Repositories
                 SELECT LAST_INSERT_ID();
             ";
 
-            return await _connection.ExecuteScalarAsync<int>(query, patientInsertDTO);
+            return await connection.ExecuteScalarAsync<int>(query, patientInsertDTO);
         }
 
         public async Task<bool> UpdatePatientAsync(PatientDTO patientDTO)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = @"
                 UPDATE Patient SET 
                     Name = @Name,
@@ -108,20 +120,26 @@ namespace ClinAgenda.Infrastructure.Repositories
                     StatusId = @StatusId
                 WHERE Id = @Id;";
 
-            int rowsAffected = await _connection.ExecuteAsync(query, patientDTO);
+            int rowsAffected = await connection.ExecuteAsync(query, patientDTO);
             return rowsAffected > 0;
         }
 
         public async Task<int> DeletePatientAsync(int id)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = "DELETE FROM Patient WHERE ID = @Id";
             var parameters = new { Id = id };
 
-            return await _connection.ExecuteAsync(query, parameters);
+            return await connection.ExecuteAsync(query, parameters);
         }
 
         public async Task<IEnumerable<PatientListDTO>> AutoCompletePatientAsync(String name)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             var queryBase = new StringBuilder(@"
                 FROM PATIENT P 
                 INNER JOIN STATUS S ON S.ID = P.STATUSID
@@ -148,7 +166,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                 {queryBase}
                 ORDER BY P.ID";
             
-            return await _connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
+            return await connection.QueryAsync<PatientListDTO>(dataQuery, parameters);
         }
 
     }

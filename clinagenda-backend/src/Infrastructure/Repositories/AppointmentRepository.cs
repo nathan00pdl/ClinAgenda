@@ -1,26 +1,27 @@
 using System.Text;
 using ClinAgenda.Application.DTOs;
 using ClinAgenda.Application.DTOs.Appointment;
-using ClinAgenda.Application.DTOs.Patient;
 using ClinAgenda.Core.Interfaces;
 using Dapper;
 using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Asn1;
 
 namespace ClinAgenda.Infrastructure.Repositories
 {
     public class AppointmentRepository : IAppointmentRepository
     {
 
-        private readonly MySqlConnection _connection;
+        private readonly String _connectionString;
 
-        public AppointmentRepository(MySqlConnection mySqlConnection)
+        public AppointmentRepository(String connection)
         {
-            _connection = mySqlConnection;
+            _connectionString = connection;
         }
 
         public async Task<(int total, IEnumerable<AppointmentListDTO> appointment)> GetAllAppointmentAync(String? patientName, String? doctorName, int? specialtyId, int itemsPerPage, int page)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             var queryBase = new StringBuilder(@"
                 FROM Appointment A 
                 INNER JOIN PATIENT P ON P.ID = A.PATIENTID
@@ -49,7 +50,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             }
 
             var countQuery = $"SELECT COUNT(DISTINCT A.ID) {queryBase}";
-            int total = await _connection.ExecuteScalarAsync<int>(countQuery, parameters);
+            int total = await connection.ExecuteScalarAsync<int>(countQuery, parameters);
 
             var dataQuery = $@"
                 SELECT 
@@ -68,32 +69,41 @@ namespace ClinAgenda.Infrastructure.Repositories
             parameters.Add("Limit", itemsPerPage);
             parameters.Add("Offset", (page - 1) * itemsPerPage);
 
-            var appointment = await _connection.QueryAsync<AppointmentListDTO>(dataQuery, parameters);
-            
+            var appointment = await connection.QueryAsync<AppointmentListDTO>(dataQuery, parameters);
+
             return (total, appointment);
         }
 
         public async Task<AppointmentDTO?> GetAppointmentByIdAsync(int id)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = "SELECT * FROM Appointment WHERE Id = @Id;";
             var parameters = new { Id = id };
 
-            return await _connection.QueryFirstOrDefaultAsync<AppointmentDTO>(query, parameters);
+            return await connection.QueryFirstOrDefaultAsync<AppointmentDTO>(query, parameters);
         }
 
         public async Task<int> InsertAppointmentAsync(AppointmentDTO appointmentDTO)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = @"
                 INSERT INTO Appointment (patientId, doctorId, specialtyId, appointmentDate, observation)
                 VALUES (@patientId, @doctorId, @specialtyId, @appointmentDate, @observation);
 
                 SELECT LAST_INSERT_ID();";
 
-            return await _connection.ExecuteScalarAsync<int>(query, appointmentDTO);
+            return await connection.ExecuteScalarAsync<int>(query, appointmentDTO);
         }
 
         public async Task<bool> UpdateAppointmentAsync(AppointmentInsertDTO appointmentInsertDTO)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = @"
                 UPDATE Appointment SET 
                     patientId = @PatientId,
@@ -102,17 +112,20 @@ namespace ClinAgenda.Infrastructure.Repositories
                     appointmentDate = @AppointmentDate,
                     observation = @Observation
                 WHERE Id = @Id;";
-            
-            int rowsAffected = await _connection.ExecuteAsync(query, appointmentInsertDTO);
+
+            int rowsAffected = await connection.ExecuteAsync(query, appointmentInsertDTO);
             return rowsAffected > 0;
         }
 
         public async Task<int> DeleteAppointmentAsync(int id)
         {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
             String query = "DELETE FROM Appointment WHERE ID = @Id";
             var parameters = new { Id = id };
-            
-            return await _connection.ExecuteAsync(query, parameters);
+
+            return await connection.ExecuteAsync(query, parameters);
         }
     }
 }
