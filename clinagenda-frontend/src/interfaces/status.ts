@@ -12,3 +12,7 @@ export interface IStatus {
     total: number
     items: IStatus[]
   }
+
+  export type StatusForm = {
+    name: IStatus['name']
+  }

@@ -23,20 +23,13 @@ const headers = [
     cellProps: { class: 'text-no-wrap' }
   },
   {
-    title: 'Ações',
+    title: 'Actions',
     key: 'actions',
     sortable: false,
     width: 0,
     cellProps: { class: 'text-no-wrap' }
   }
 ]
-
-const handleDataTableUpdate = async ({ page: tablePage, itemsPerPage: tableItemsPerPage }: any) => {
-  page.value = tablePage
-  itemsPerPage.value = tableItemsPerPage
-
-  loadDataTable()
-}
 
 const loadDataTable = async () => {
   isLoadingList.value = true
@@ -54,7 +47,15 @@ const loadDataTable = async () => {
 
   items.value = data.items
   total.value = data.total
+
   isLoadingList.value = false
+}
+
+const handleDataTableUpdate = async ({ page: tablePage, itemsPerPage: tableItemsPerPage }: any) => {
+  page.value = tablePage
+  itemsPerPage.value = tableItemsPerPage
+
+  loadDataTable()
 }
 
 const deleteListItem = async (item: IStatus) => {
@@ -84,12 +85,10 @@ const deleteListItem = async (item: IStatus) => {
 
 <template>
   <default-template>
-    <template #title> Lista de status </template>
+    <template #title> List of Status </template>
 
     <template #action>
-      <v-btn color="primary" :prepend-icon="mdiPlusCircle" :to="{ name: 'status-insert' }">
-        Add Status
-      </v-btn>
+      <v-btn color="primary" :prepend-icon="mdiPlusCircle" :to="{ name: 'status-insert' }"> Add Status </v-btn>
     </template>
 
     <template #default>
