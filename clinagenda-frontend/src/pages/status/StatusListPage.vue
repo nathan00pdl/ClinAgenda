@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import request from '@/engine/httpClient'
+import type { GetStatusListRequest, GetStatusListResponse, IStatus } from '@/interfaces/status'
+import { useToastStore } from '@/stores'
 import { DefaultTemplate } from '@/template'
 import { mdiPlusCircle, mdiTrashCan } from '@mdi/js'
-import type { IStatus, GetStatusListRequest, GetStatusListResponse } from '@/interfaces/status'
-import request from '@/engine/httpClient'
-import { useToastStore } from '@/stores'
+import { ref } from 'vue'
 
 const toastStore = useToastStore()
 const isLoadingList = ref<boolean>(false)
