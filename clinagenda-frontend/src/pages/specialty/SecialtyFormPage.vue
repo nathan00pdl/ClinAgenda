@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import request from '@/engine/httpClient'
+import { PageMode } from '@/enum'
+import type { SpecialtyForm } from '@/interfaces/specialty'
+import router from '@/router'
+import { useToastStore } from '@/stores'
 import { DefaultTemplate } from '@/template'
 import { mdiCancel, mdiPlusCircle } from '@mdi/js'
-import type { SpecialtyForm } from '@/interfaces/specialty'
-import request from '@/engine/httpClient'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { PageMode } from '@/enum'
-import { useToastStore } from '@/stores'
-import router from '@/router'
 
 const toastStore = useToastStore()
 
 const isLoadingForm = ref<boolean>(false)
-const form = ref<SpecialtyForm>({
-    name: '',
-    scheduleDuration: ''
-})
 
 const route = useRoute()
 const id = route.params.id
 const pageMode = id ? PageMode.PAGE_UPDATE : PageMode.PAGE_INSERT
+
+const form = ref<SpecialtyForm>({
+    name: '',
+    scheduleDuration: ''
+})
 
 const pageTitle = computed(() => {
   return pageMode === PageMode.PAGE_UPDATE ? 'Specialty Edit' : 'Register New Specialty'
