@@ -25,7 +25,6 @@ const headers = [
   {
     title: 'Name', 
     key: 'name',
-    width: 0,
     sortable: false
   },
   {
