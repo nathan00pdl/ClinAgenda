@@ -1,5 +1,6 @@
 using ClinAgenda.Application.DTOs;
 using ClinAgenda.Core.Interfaces;
+using Org.BouncyCastle.Asn1.Rosstandart;
 
 namespace ClinAgenda.Application.UseCases
 {
@@ -37,6 +38,12 @@ namespace ClinAgenda.Application.UseCases
         {
            
             return await _specialtyRepository.InsertSpecialtyAsync(specialtyInsertDTO);
+        }
+
+        public async Task<bool> DeleteSpecialtyAsync(int id)
+        {
+            var rowsAffected = await _specialtyRepository.DeleteSpecialtyAsync(id);
+            return rowsAffected > 0;
         }
     }
 }

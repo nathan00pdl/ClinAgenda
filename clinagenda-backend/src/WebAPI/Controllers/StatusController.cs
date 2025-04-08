@@ -83,7 +83,7 @@ namespace ClinAgenda.WebAPI.Controllers
 
             if (hasPatients.Total > 0 || hasDoctors.Total > 0)
             {
-                return StatusCode(500, $"The Status is Associated with one or more Patients / Doctors");
+                return StatusCode(500, $"The Status is Associated with One or More Patients / Doctors");
             }
 
             var success = await _statusUseCase.DeleteStatusAsync(id);
