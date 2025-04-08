@@ -13,7 +13,7 @@ namespace ClinAgenda.Application.UseCases
             _patientRepository = patientRepository;
         }
 
-        public async Task<object> GetAllPatientAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
+        public async Task<PatientResponseDTO> GetAllPatientAsync(String? name, String? documentNumber, int? statusId, int itemsPerPage, int page)
         {
             var (total, rawData) = await _patientRepository.GetAllPatientAsync(name, documentNumber, statusId, itemsPerPage, page);
 
@@ -33,10 +33,10 @@ namespace ClinAgenda.Application.UseCases
                 })
                 .ToList();
 
-            return new 
+            return new PatientResponseDTO
             { 
-                total, 
-                items = patients 
+                Total = total, 
+                Items = patients 
             };
         }
 
