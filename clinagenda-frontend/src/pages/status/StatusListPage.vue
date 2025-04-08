@@ -23,6 +23,12 @@ const headers = [
     cellProps: { class: 'text-no-wrap' }
   },
   {
+    title: 'Name', 
+    key: 'name',
+    width: 0,
+    sortable: false
+  },
+  {
     title: 'Actions',
     key: 'actions',
     sortable: false,
@@ -62,24 +68,19 @@ const deleteListItem = async (item: IStatus) => {
   const shouldDelete = confirm(`Do You Really Want Delete ${item.name}?`)
 
   if (!shouldDelete) return
+  const response = await request<null, null>({
+    method: 'DELETE',
+    endpoint: `status/delete/${item.id}`
+  })
 
-  try {
-    const response = await request<null, null>({
-      method: 'DELETE',
-      endpoint: `status/delete/${item.id}`
-    })
+  if (response.isError) return
 
-    if (response.isError) return
+  toastStore.setToast({
+    type: 'success',
+    text: 'Status Deleted Successfully.'
+  })
 
-    toastStore.setToast({
-      type: 'success',
-      text: 'Status Deleted Successfully.'
-    })
-
-    loadDataTable()
-  } catch (e) {
-    console.error('Error Deleting Item From List.', e)
-  }
+  loadDataTable()
 }
 </script>
 

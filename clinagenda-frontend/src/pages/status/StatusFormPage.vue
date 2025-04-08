@@ -10,16 +10,13 @@ import { useToastStore } from '@/stores'
 import router from '@/router'
 
 const toastStore = useToastStore()
-const route = useRoute()
 
 const isLoadingForm = ref<boolean>(false)
+const form = ref<StatusForm>({name: ''})
 
+const route = useRoute()
 const id = route.params.id
 const pageMode = id ? PageMode.PAGE_UPDATE : PageMode.PAGE_INSERT
-
-const form = ref<StatusForm>({
-  name: ''
-})
 
 const pageTitle = computed(() => {
   return pageMode === PageMode.PAGE_UPDATE ? 'Status Edit' : 'Register New Status'
@@ -75,16 +72,14 @@ onMounted(() => {
     </template>
 
     <template #action>
-      <v-btn :prepend-icon="mdiCancel" :to="{ name: 'status-list' }"> Cancelar </v-btn>
-      <v-btn color="primary" :prepend-icon="mdiPlusCircle" @click.prevent="submitForm">
-        Salvar
-      </v-btn>
+      <v-btn :prepend-icon="mdiCancel" :to="{ name: 'status-list' }"> Cancel </v-btn>
+      <v-btn color="primary" :prepend-icon="mdiPlusCircle" @click.prevent="submitForm"> Save </v-btn>
     </template>
 
     <v-form :disabled="isLoadingForm" @submit.prevent="submitForm">
       <v-row>
         <v-col cols="6">
-          <v-text-field v-model.trim="form.name" label="Nome" hide-details />
+          <v-text-field v-model.trim="form.name" label="Name" hide-details />
         </v-col>
       </v-row>
     </v-form>

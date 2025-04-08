@@ -51,9 +51,7 @@ const contentClass = computed(() => {
   <v-main>
     <div class="pa-6">
       <div class="header">
-        <div class="header__title text-h4">
-          <slot name="title" />
-        </div>
+        <div class="header__title text-h4"><slot name="title" /></div>
         <div class="header__action">
           <slot name="action" />
         </div>
