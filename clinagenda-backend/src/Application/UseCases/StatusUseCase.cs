@@ -33,5 +33,11 @@ namespace ClinAgenda.Application.UseCases
         {
             return await _statusRepository.InsertStatusAsync(statusInsertDTO);
         }
+
+        public async Task<bool> DeleteStatusAsync(int id)
+        {
+            var rowsAffected = await _statusRepository.DeleteStatusAsync(id);
+            return rowsAffected > 0;
+        }
     }
 }

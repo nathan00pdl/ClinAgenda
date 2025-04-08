@@ -1,6 +1,8 @@
 using ClinAgenda.Application.DTOs;
 using ClinAgenda.Application.UseCases;
+using ClinAgenda.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using ZstdSharp.Unsafe;
 
 namespace ClinAgenda.WebAPI.Controllers
 {
@@ -9,10 +11,14 @@ namespace ClinAgenda.WebAPI.Controllers
     public class StatusController : ControllerBase
     {
         private readonly StatusUseCase _statusUseCase;
+        private readonly PatientUseCase _patientUseCase;
+        private readonly DoctorUseCase _doctorUseCase;
 
-        public StatusController(StatusUseCase statusService)
+        public StatusController(StatusUseCase statusService, PatientUseCase patientService, DoctorUseCase doctorService)
         {
             _statusUseCase = statusService;
+            _patientUseCase = patientService;
+            _doctorUseCase = doctorService;
         }
 
         [HttpGet("list")]
@@ -67,6 +73,26 @@ namespace ClinAgenda.WebAPI.Controllers
             {
                 return StatusCode(500, $"Error When Created Status: {ex.Message}");
             }
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteStatus(int id)
+        {
+            var hasPatients = await _patientUseCase.GetAllPatientAsync(null, null, statusId: id, 1, 1);
+            var hasDoctors = await _doctorUseCase.GetAllDoctorAsync(null, null, statusId: id, 1, 1);
+
+            if (hasPatients.Total > 0 || hasDoctors.Total > 0)
+            {
+                return StatusCode(500, $"The Status is Associated with one or more Patients / Doctors");
+            }
+
+            var success = await _statusUseCase.DeleteStatusAsync(id);
+            if (!success) 
+            {
+                return NotFound("Status with ID {id} Not Found.");
+            }
+
+            return Ok();
         }
     }
 }
