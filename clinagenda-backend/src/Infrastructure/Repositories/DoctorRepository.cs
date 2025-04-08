@@ -16,7 +16,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             _connectionString = connection;
         }
 
-        public async Task<IEnumerable<DoctorListDTO>> GetAllDoctorAsync(String? name, int? specialtyId, int? statusId, int offset, int itemsPerPage)
+        public async Task<(int total, IEnumerable<DoctorListDTO> doctors)> GetAllDoctorAsync(String? name, int? specialtyId, int? statusId, int offset, int itemsPerPage)
         {
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -48,6 +48,9 @@ namespace ClinAgenda.Infrastructure.Repositories
                 parameters.Add("StatusId", statusId.Value);
             }
 
+            var countQuery = $"SELECT COUNT(DISTINCT D.ID) {queryBase}";
+            int total = await connection.ExecuteScalarAsync<int>(countQuery, parameters);
+
             parameters.Add("LIMIT", itemsPerPage);
             parameters.Add("OFFSET", offset);
 
@@ -60,8 +63,10 @@ namespace ClinAgenda.Infrastructure.Repositories
                 {queryBase}
                 ORDER BY D.ID
                 LIMIT @Limit OFFSET @Offset";
+
+            var doctors = await connection.QueryAsync<DoctorListDTO>(dataQuery.ToString(), parameters);
             
-            return await connection.QueryAsync<DoctorListDTO>(dataQuery.ToString(), parameters);
+            return (total, doctors);
         }
 
         public async Task<IEnumerable<DoctorListDTO>> GetDoctorByIdAsync(int id)

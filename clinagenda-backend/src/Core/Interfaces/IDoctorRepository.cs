@@ -4,7 +4,7 @@ namespace ClinAgenda.Core.Interfaces
 {
     public interface IDoctorRepository
     {
-        Task<IEnumerable<DoctorListDTO>> GetAllDoctorAsync(String? name, int? specialtyId, int? statusId, int offset, int itemsPerPage);
+        Task<(int total, IEnumerable<DoctorListDTO> doctors)> GetAllDoctorAsync(String? name, int? specialtyId, int? statusId, int offset, int itemsPerPage);
         Task<IEnumerable<DoctorListDTO>> GetDoctorByIdAsync(int id);
         Task<IEnumerable<SpecialtyDoctorDTO>> GetDoctorSpecialtiesAsync(int[] doctorIds);
         Task<int> InsertDoctorAsync(DoctorInsertDTO doctorInsertDTO);
