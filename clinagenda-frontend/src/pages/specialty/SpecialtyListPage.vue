@@ -7,12 +7,16 @@ import { mdiPlusCircle, mdiTrashCan } from '@mdi/js'
 import { ref } from 'vue'
 
 const toastStore = useToastStore()
+
 const isLoadingList = ref<boolean>(false)
+
+const filterName = ref<GetSpecialtyListRequest['name']>('')
+
+const items = ref<ISpecialty[]>([])
 const itemsPerPage = ref<number>(10)
 const page = ref<number>(1)
 const total = ref<number>(0)
-const items = ref<ISpecialty[]>([])
-const filterName = ref<GetSpecialtyListRequest['name']>('')
+
 
 const headers = [
   {

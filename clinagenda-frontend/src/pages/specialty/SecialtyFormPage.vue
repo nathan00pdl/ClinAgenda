@@ -75,7 +75,7 @@ onMounted(() => {
 
     <template #action>
       <v-btn :prepend-icon="mdiCancel" :to="{ name: 'specialty-list' }"> Cancel </v-btn>
-      <v-btn color="primary" :prepend-icon="mdiPlusCircle" @click.prevent="submitForm"> Salve </v-btn>
+      <v-btn color="primary" :prepend-icon="mdiPlusCircle" @click.prevent="submitForm"> Save </v-btn>
     </template>
 
     <v-form :disabled="isLoadingForm" @submit.prevent="submitForm">
@@ -84,7 +84,7 @@ onMounted(() => {
           <v-text-field v-model.trim="form.name" label="Name" hide-details />
         </v-col>
         <v-col cols="2">
-          <v-text-field v-model.trim="form.scheduleDuration" label="Duração" hide-details />
+          <v-text-field v-model.trim="form.scheduleDuration" label="Duration" hide-details />
         </v-col>
       </v-row>
     </v-form>
