@@ -2,6 +2,7 @@
 import { computed, ref, useSlots } from 'vue'
 import ClinicToast from '@/components/ClinicToast.vue'
 import {
+  mdiAccountInjuryOutline,
   mdiAccountTag,
   mdiHome,
   mdiLogout,
@@ -25,6 +26,11 @@ const menus = ref([
     title: 'Specialties',
     icon: mdiShapeOutline,
     to: { name: 'specialty-list' }
+  },
+  {
+    title: 'Patients',
+    icon: mdiAccountInjuryOutline,
+    to: { name: 'patient-list' }
   }
 ])
 
