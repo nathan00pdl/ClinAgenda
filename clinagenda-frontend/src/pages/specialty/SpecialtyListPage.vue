@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import request from '@/engine/httpClient'
-import type { GetSpecialtyListRequest, GetSpecialtyListResponse, ISpecialty } from '@/interfaces/specialty'
+import type {
+  GetSpecialtyListRequest,
+  GetSpecialtyListResponse,
+  ISpecialty
+} from '@/interfaces/specialty'
 import { useToastStore } from '@/stores'
 import { DefaultTemplate } from '@/template'
-import { mdiPlusCircle, mdiTrashCan } from '@mdi/js'
+import { mdiPlusCircle, mdiTrashCan, mdiSquareEditOutline } from '@mdi/js'
 import { ref } from 'vue'
 
 const toastStore = useToastStore()
@@ -16,7 +20,6 @@ const items = ref<ISpecialty[]>([])
 const itemsPerPage = ref<number>(10)
 const page = ref<number>(1)
 const total = ref<number>(0)
-
 
 const headers = [
   {
@@ -52,9 +55,9 @@ const loadDataTable = async () => {
     method: 'GET',
     endpoint: 'specialty/list',
     body: {
-        itemsPerPage: itemsPerPage.value,
-        page: page.value,
-        name: filterName.value
+      itemsPerPage: itemsPerPage.value,
+      page: page.value,
+      name: filterName.value
     }
   })
 
@@ -136,6 +139,18 @@ const deleteListItem = async (item: ISpecialty) => {
                 color="error"
                 class="mr-2"
                 @click="deleteListItem(item)"
+              />
+            </template>
+          </v-tooltip>
+          <v-tooltip text="Edit Specialties" location="left">
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                :icon="mdiSquareEditOutline"
+                size="small"
+                color="primary"
+                class="mr-2"
+                :to="{ name: 'specialty-update', params: { id: item.id } }"
               />
             </template>
           </v-tooltip>
