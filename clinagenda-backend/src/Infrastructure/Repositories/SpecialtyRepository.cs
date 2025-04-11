@@ -93,6 +93,17 @@ namespace ClinAgenda.Infrastructure.Repositories
             return await connection.ExecuteScalarAsync<int>(query, specialtyInsertDTO);
         }
 
+        public async Task<bool> UpdateSpecialtyAsync(SpecialtyDTO specialtyDTO)
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            String query = @"UPDATE Specialty SET Name = @Name, ScheduleDuration = @ScheduleDuration WHERE Id = @Id;";
+
+            int rowsAffected = await connection.ExecuteAsync(query, specialtyDTO);
+            return rowsAffected > 0;
+        }
+
         public async Task<int> DeleteSpecialtyAsync(int id)
         {
             using var connection = new MySqlConnection(_connectionString);

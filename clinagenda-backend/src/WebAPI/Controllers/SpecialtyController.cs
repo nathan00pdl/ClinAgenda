@@ -54,7 +54,7 @@ namespace ClinAgenda.WebAPI.Controllers
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
-        
+
         [HttpPost("insert")]
         public async Task<IActionResult> CreateSpecialty([FromBody] SpecialtyInsertDTO specialtyInsertDTO)
         {
@@ -80,6 +80,26 @@ namespace ClinAgenda.WebAPI.Controllers
             }
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateSpecialty(int id, [FromBody] SpecialtyDTO specialtyDTO)
+        {
+            try
+            {
+                if (specialtyDTO == null) return BadRequest();
+
+                bool updated = await _specialtyUsecase.UpdateSpecialtyAsync(id, specialtyDTO);
+                if (!updated) return NotFound("Specialty Not Found.");
+
+                var updatedSpecialty = await _specialtyUsecase.UpdateSpecialtyAsync(id, specialtyDTO);
+
+                return Ok(updatedSpecialty);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"{ex.Message}");
+            }
+        }
+
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteSpecialty(int id)
         {
@@ -92,7 +112,7 @@ namespace ClinAgenda.WebAPI.Controllers
                 }
 
                 var success = await _specialtyUsecase.DeleteSpecialtyAsync(id);
-                if(!success)
+                if (!success)
                 {
                     return NotFound("Specialty with ID {id} Not Found.");
                 }
