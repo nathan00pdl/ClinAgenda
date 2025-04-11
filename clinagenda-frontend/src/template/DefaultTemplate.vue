@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, useSlots } from 'vue'
 import ClinicToast from '@/components/ClinicToast.vue'
 import {
   mdiAccountInjuryOutline,
   mdiAccountTag,
+  mdiDoctor,
   mdiHome,
   mdiLogout,
-  mdiShapeOutline,
-  mdiDoctor
+  mdiShapeOutline
 } from '@mdi/js'
+import { computed, ref, useSlots } from 'vue'
 
 const drawer = ref(true)
 

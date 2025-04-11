@@ -2,7 +2,7 @@
 <script lang="ts">
 import request from '@/engine/httpClient'
 import { PageMode } from '@/enum'
-import type { PatientForm } from '@/interfaces/patient'
+import type { GetPatientListRequest, GetPatientResponse, PatientForm } from '@/interfaces/patient'
 import type { GetStatusListResponse, IStatus } from '@/interfaces/status'
 import router from '@/router'
 import { useToastStore } from '@/stores'
@@ -80,7 +80,7 @@ const loadForm = async () => {
   const requests: Promise<any>[] = [statusRequest]
 
   if (pageMode === PageMode.PAGE_UPDATE) {
-    const patientFormRequest = request<undefined, PatientForm>({
+    const patientFormRequest = request<undefined, GetPatientResponse>({
       method: 'GET',
       endpoint: `patient/listById/${id}`
     })
@@ -96,6 +96,7 @@ const loadForm = async () => {
 
   if (pageMode === PageMode.PAGE_UPDATE) {
     form.value = patientFormResonse.data
+    form.value.statusId = patientFormResonse.data.id
   }
 
   isLoadingForm.value = false

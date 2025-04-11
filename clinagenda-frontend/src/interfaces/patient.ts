@@ -17,9 +17,12 @@ export type GetPatientListRequest = {
   statusId: IStatus['id'] | null
 }
 
-export type GetPatientListResponse = {
-  total: number
-  items: IPatient[]
+export type GetPatientResponse = {
+  name: IPatient['name']
+  documentNumber: IPatient['documentNumber']
+  phoneNumber: IPatient['phoneNumber']
+  birthDate: IPatient['birthDate']
+  statusId: IStatus
 }
 
 export type PatientForm = {
