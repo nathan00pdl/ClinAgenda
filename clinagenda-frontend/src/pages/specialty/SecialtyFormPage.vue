@@ -53,7 +53,7 @@ const loadForm = async () => {
   isLoadingForm.value = true
 
   const specialtyFormResponse = await request<undefined, SpecialtyForm>({
-    method: 'GET',
+    method: 'PUT',
     endpoint: `specialty/update/${id}`
   })
 

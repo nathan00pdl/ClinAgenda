@@ -145,6 +145,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             await connection.OpenAsync();
 
             String query = @"UPDATE Doctor SET Name = @Name, StatusId = @StatusId WHERE Id = @Id";
+            
             var rowsAffected = await connection.ExecuteAsync(query, doctorDTO);
             return rowsAffected > 0;
         }
