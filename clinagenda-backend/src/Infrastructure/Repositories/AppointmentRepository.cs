@@ -61,7 +61,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                     S.ID AS SPECIALTYID,
                     S.NAME AS SPECIALTYNAME,
                     S.SCHEDULEDURATION AS SCHEDULEDURATION,
-                    A.APPOINTMENTDATE AS APPOINTMENTDATE,
+                    DATE_FORMAT(A.APPOINTMENTDATE, '%d/%m/%Y') AS APPOINTMENTDATE,
                     A.OBSERVATION AS OBSERVATION
                 {queryBase}
                 ORDER BY A.ID
@@ -80,7 +80,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            String query = "SELECT * FROM Appointment WHERE Id = @Id;";
+            String query = "SELECT *, DATE_FORMAT(A.APPOINTMENTDATE, '%d/%m/%Y') AS APPOINTMENTDATE FROM Appointment WHERE Id = @Id;";
             var parameters = new { Id = id };
 
             return await connection.QueryFirstOrDefaultAsync<AppointmentDTO>(query, parameters);
