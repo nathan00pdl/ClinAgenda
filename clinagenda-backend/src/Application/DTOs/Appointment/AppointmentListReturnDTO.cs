@@ -9,6 +9,7 @@ namespace ClinAgenda.Application.DTOs.Appointment
         public required PatientReturnAppointmentDTO Patient { get; set; }
         public required DoctorReturnAppointmentDTO Doctor { get; set; }
         public required SpecialtyDTO Specialty { get; set; }
-        public required string AppointmentDate { get; set; }
+        public required String AppointmentDate { get; set; }
+        public required String Observation { get; set; }
     }
 }

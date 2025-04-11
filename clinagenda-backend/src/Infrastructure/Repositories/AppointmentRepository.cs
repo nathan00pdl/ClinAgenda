@@ -61,7 +61,8 @@ namespace ClinAgenda.Infrastructure.Repositories
                     S.ID AS SPECIALTYID,
                     S.NAME AS SPECIALTYNAME,
                     S.SCHEDULEDURATION AS SCHEDULEDURATION,
-                    A.APPOINTMENTDATE AS APPOINTMENTDATE
+                    A.APPOINTMENTDATE AS APPOINTMENTDATE,
+                    A.OBSERVATION AS OBSERVATION
                 {queryBase}
                 ORDER BY A.ID
                 LIMIT @Limit OFFSET @Offset";

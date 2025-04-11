@@ -10,5 +10,6 @@ namespace ClinAgenda.Application.DTOs.Appointment
         public required String SpecialtyName { get; set; }
         public required String AppointmentDate { get; set; }
         public int ScheduleDuration { get; set; }
+        public required String Observation { get; set; }
     }
 }
