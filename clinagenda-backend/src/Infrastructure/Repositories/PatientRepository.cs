@@ -70,25 +70,27 @@ namespace ClinAgenda.Infrastructure.Repositories
             return (total, patients);
         }
 
-        public async Task<PatientDTO?> GetPatientByIdAsync(int id)
+        public async Task<PatientListDTO?> GetPatientByIdAsync(int id)
         {
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
             const String query = @"
                 SELECT 
-                    ID, 
-                    NAME, 
-                    PHONENUMBER, 
-                    DOCUMENTNUMBER, 
-                    STATUSID, 
-                    DATE_FORMAT(BIRTHDATE, '%d/%m/%Y') AS BIRTHDATE 
-                FROM PATIENT 
-                WHERE ID = @ID";
+                    P.ID, 
+                    P.NAME,
+                    P.PHONENUMBER,
+                    P.DOCUMENTNUMBER,
+                    P.STATUSID,
+                    DATE_FORMAT(P.BIRTHDATE, '%d/%m/%Y') AS BIRTHDATE,
+                    S.NAME AS STATUSNAME
+                FROM PATIENT P
+                INNER JOIN STATUS S ON S.ID = P.STATUSID
+                WHERE P.ID = @Id";
 
             var parameters = new { Id = id };   
 
-            return await connection.QueryFirstOrDefaultAsync<PatientDTO>(query, parameters);
+            return await connection.QueryFirstOrDefaultAsync<PatientListDTO>(query, parameters);
         }
 
         public async Task<int> InsertPatientAsync(PatientInsertDTO patientInsertDTO) 

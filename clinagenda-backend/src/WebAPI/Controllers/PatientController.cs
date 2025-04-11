@@ -87,6 +87,7 @@ namespace ClinAgenda.WebAPI.Controllers
 
                 bool updated = await _patientUseCase.UpdatePatientAsync(id, patientInsertDTO);
                 if (!updated) return NotFound("Patient Not Found.");
+                
                 var infosPatientUpdate = await _patientUseCase.GetPatientByIdAsync(id);
 
                 return Ok(infosPatientUpdate);
