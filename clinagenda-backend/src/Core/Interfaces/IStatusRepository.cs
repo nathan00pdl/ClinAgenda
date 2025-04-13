@@ -17,6 +17,7 @@ namespace ClinAgenda.Core.Interfaces
         Task<(int total, IEnumerable<StatusDTO> specialtys)> GetAllStatusAsync(int? itemsPerPage, int? page);
         Task<StatusDTO> GetStatusByIdAsync(int Id);
         Task<int> InsertStatusAsync(StatusInsertDTO statusInsertDTO);
+        Task<bool> UpdateStatusAsync(StatusDTO statusDTO);
         Task<int> DeleteStatusAsync(int id);
     }
 }

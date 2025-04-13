@@ -79,6 +79,17 @@ namespace ClinAgenda.Infrastructure.Repositories
             return await connection.ExecuteScalarAsync<int>(query, statusInsertDTO); // @Name is passed by statusInsertDTO
         }
 
+        public async Task<bool> UpdateStatusAsync(StatusDTO statusDTO)
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            String query = @"UPDATE STATUS SET Name = @Name WHERE Id = @Id;";
+
+            int rowsAffected = await connection.ExecuteAsync(query, statusDTO);
+            return rowsAffected > 0;
+        }
+
         public async Task<int> DeleteStatusAsync(int id)
         {
             using var connection = new MySqlConnection(_connectionString);

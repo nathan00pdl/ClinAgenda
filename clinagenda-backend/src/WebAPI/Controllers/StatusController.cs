@@ -75,6 +75,25 @@ namespace ClinAgenda.WebAPI.Controllers
             }
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] StatusInsertDTO statusInsertDTO)
+        {
+            try
+            {
+                if (statusInsertDTO == null) return BadRequest();
+
+                bool updated = await _statusUseCase.UpdateStatusAsync(id, statusInsertDTO);
+                if (!updated) return NotFound($"Status with Id {id} Not Found.");
+
+                var updatedStatus = await _statusUseCase.GetStatusByIdAsync(id);
+                return Ok(updatedStatus);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"{ex.Message}");
+            }
+        }
+
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteStatus(int id)
         {
@@ -87,7 +106,7 @@ namespace ClinAgenda.WebAPI.Controllers
             }
 
             var success = await _statusUseCase.DeleteStatusAsync(id);
-            if (!success) 
+            if (!success)
             {
                 return NotFound("Status with ID {id} Not Found.");
             }

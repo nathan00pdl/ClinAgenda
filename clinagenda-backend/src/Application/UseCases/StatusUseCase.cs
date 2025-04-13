@@ -34,6 +34,19 @@ namespace ClinAgenda.Application.UseCases
             return await _statusRepository.InsertStatusAsync(statusInsertDTO);
         }
 
+        public async Task<bool> UpdateStatusAsync(int id, StatusInsertDTO statusInsertDTO)
+        {
+            await _statusRepository.GetStatusByIdAsync(id);
+
+            var statusToUpdate = new StatusDTO
+            {
+                Id = id,
+                Name = statusInsertDTO.Name,
+            };
+
+            return await _statusRepository.UpdateStatusAsync(statusToUpdate);
+        }
+
         public async Task<bool> DeleteStatusAsync(int id)
         {
             var rowsAffected = await _statusRepository.DeleteStatusAsync(id);
