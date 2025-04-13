@@ -3,7 +3,7 @@ import request from '@/engine/httpClient'
 import type { GetStatusListRequest, GetStatusListResponse, IStatus } from '@/interfaces/status'
 import { useToastStore } from '@/stores'
 import { DefaultTemplate } from '@/template'
-import { mdiPlusCircle, mdiTrashCan } from '@mdi/js'
+import { mdiPlusCircle, mdiTrashCan, mdiSquareEditOutline } from '@mdi/js'
 import { ref } from 'vue'
 
 const toastStore = useToastStore()
@@ -113,6 +113,18 @@ const deleteListItem = async (item: IStatus) => {
                 color="error"
                 class="mr-2"
                 @click="deleteListItem(item)"
+              />
+            </template>
+          </v-tooltip>
+          <v-tooltip text="Edit Status" location="left">
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                :icon="mdiSquareEditOutline"
+                size="small"
+                color="primary"
+                class="mr-2"
+                :to="{ name: 'status-update', params: { id: item.id } }"
               />
             </template>
           </v-tooltip>

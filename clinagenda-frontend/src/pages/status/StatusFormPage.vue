@@ -52,7 +52,7 @@ const loadForm = async () => {
   isLoadingForm.value = true
 
   const statusFormResponse = await request<undefined, StatusForm>({
-    method: 'GET',
+    method: 'PUT',
     endpoint: `status/update/${id}`
   })
 
@@ -70,9 +70,7 @@ onMounted(() => {
 
 <template>
   <default-template>
-    <template #title>
-      {{ pageTitle }}
-    </template>
+    <template #title> {{ pageTitle }} </template>
 
     <template #action>
       <v-btn :prepend-icon="mdiCancel" :to="{ name: 'status-list' }"> Cancel </v-btn>
