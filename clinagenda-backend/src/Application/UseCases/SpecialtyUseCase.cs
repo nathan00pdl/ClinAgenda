@@ -39,14 +39,18 @@ namespace ClinAgenda.Application.UseCases
             return await _specialtyRepository.InsertSpecialtyAsync(specialtyInsertDTO);
         }
 
-        public async Task<bool> UpdateSpecialtyAsync(int id, SpecialtyDTO specialtyDTO)
+        public async Task<bool> UpdateSpecialtyAsync(int id, SpecialtyInsertDTO specialtyInsertDTO)
         {
-            var existingSpecialty = await _specialtyRepository.GetSpecialtyByIdAsync(id) ?? throw new KeyNotFoundException($"Specialty with ID {id} Not Found");
+            await _specialtyRepository.GetSpecialtyByIdAsync(id);
 
-            existingSpecialty.Name = specialtyDTO.Name;
-            existingSpecialty.ScheduleDuration = specialtyDTO.ScheduleDuration;
+            var specialtyToUpdate = new SpecialtyDTO 
+            {
+                Id = id,
+                Name = specialtyInsertDTO.Name,
+                ScheduleDuration = specialtyInsertDTO.ScheduleDuration
+            };
 
-            return await _specialtyRepository.UpdateSpecialtyAsync(existingSpecialty);
+            return await _specialtyRepository.UpdateSpecialtyAsync(specialtyToUpdate);
         }
 
         public async Task<bool> DeleteSpecialtyAsync(int id)

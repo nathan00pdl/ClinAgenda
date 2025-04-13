@@ -81,17 +81,16 @@ namespace ClinAgenda.WebAPI.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateSpecialty(int id, [FromBody] SpecialtyDTO specialtyDTO)
+        public async Task<IActionResult> UpdateSpecialty(int id, [FromBody] SpecialtyInsertDTO specialtyInsertDTO)
         {
             try
             {
-                if (specialtyDTO == null) return BadRequest();
+                if (specialtyInsertDTO == null) return BadRequest();
 
-                bool updated = await _specialtyUsecase.UpdateSpecialtyAsync(id, specialtyDTO);
-                if (!updated) return NotFound("Specialty Not Found.");
+                bool updated = await _specialtyUsecase.UpdateSpecialtyAsync(id, specialtyInsertDTO);
+                if (!updated) return NotFound($"Specialty with Id {id} Not Found.");
 
-                var updatedSpecialty = await _specialtyUsecase.UpdateSpecialtyAsync(id, specialtyDTO);
-
+                var updatedSpecialty = await _specialtyUsecase.GetSpecialtyByIdAsync(id);
                 return Ok(updatedSpecialty);
             }
             catch (Exception ex)
