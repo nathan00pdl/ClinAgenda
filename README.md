@@ -13,11 +13,6 @@ Built during the **DEVPIRA + PECEGE 2025** bootcamp. It is my first project in C
 
 <p align="center"><a href="docs/architecture.svg"><img src="docs/architecture.svg" alt="The Vue pages call the API through an axios client; in the ASP.NET Core backend the controllers call the use cases, which call the Dapper repositories, down to MySQL, whose schema Flyway manages." width="308"></a></p>
 
-| Folder | What it is |
-|---|---|
-| `clinagenda-backend/` | The API: ASP.NET Core 8, C# |
-| `clinagenda-frontend/` | The frontend: Vue 3 with Vuetify |
-
 ### Backend
 
 Four layers, each one depending only on the one below it:
