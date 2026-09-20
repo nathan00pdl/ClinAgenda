@@ -7,13 +7,16 @@ Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
+    ?? throw new InvalidOperationException("AllowedOrigins is not configured.");
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin() 
-              .AllowAnyHeader() 
-              .AllowAnyMethod(); 
+        policy.WithOrigins(allowedOrigins)  // the frontend's dev server, from appsettings.json
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 

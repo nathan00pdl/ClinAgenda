@@ -33,7 +33,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             if (!String.IsNullOrEmpty(name))
             {
                 queryBase.Append("AND D.NAME LIKE @Name");
-                parameters.Add("Name", $"{name}");
+                parameters.Add("Name", $"%{name}%");
             }
 
             if (specialtyId.HasValue)
@@ -57,7 +57,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             var dataQuery = $@"
                 SELECT DISTINCT 
                     D.ID AS ID,
-                    S.NAME AS NAME,
+                    D.NAME AS NAME,
                     S.ID AS STATUSID,
                     S.NAME AS STATUSNAME
                 {queryBase}
@@ -95,7 +95,7 @@ namespace ClinAgenda.Infrastructure.Repositories
                     D.ID,
                     D.NAME,
                     D.STATUSID AS STATUSID,
-                    D.NAME AS STATUSNAME,
+                    S.NAME AS STATUSNAME,
                     DSPE.SPECIALTYID AS SPECIALTYID,
                     SP.NAME AS SPECIALTYNAME
                 {queryBase}

@@ -42,7 +42,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return (total, specialtys);
         }
 
-        public async Task<SpecialtyDTO> GetSpecialtyByIdAsync(int id)
+        public async Task<SpecialtyDTO?> GetSpecialtyByIdAsync(int id)
         {
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -57,7 +57,7 @@ namespace ClinAgenda.Infrastructure.Repositories
 
             var parameters = new { Id = id };
 
-            return await connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, parameters) ?? throw new KeyNotFoundException($"Specialty with ID {id} Not Found."); ;
+            return await connection.QueryFirstOrDefaultAsync<SpecialtyDTO>(query, parameters); ;
         }
 
         public async Task<IEnumerable<SpecialtyDTO>> GetSpecialtiesByIds(List<int> id)

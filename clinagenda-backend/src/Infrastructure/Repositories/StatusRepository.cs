@@ -53,7 +53,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             return (total, status);
         }
 
-        public async Task<StatusDTO> GetStatusByIdAsync(int id)
+        public async Task<StatusDTO?> GetStatusByIdAsync(int id)
         {
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -61,7 +61,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             String query = @"SELECT ID, NAME FROM STATUS WHERE ID = @Id";
             var parameters = new { Id = id }; // Creating an anonymous object to avoid SQL injection
 
-            return await connection.QueryFirstOrDefaultAsync<StatusDTO>(query, parameters) ?? throw new KeyNotFoundException($"Status with ID {id} not found.");
+            return await connection.QueryFirstOrDefaultAsync<StatusDTO>(query, parameters);
         }
 
         public async Task<int> InsertStatusAsync(StatusInsertDTO statusInsertDTO)
