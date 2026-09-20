@@ -1,0 +1,23 @@
+---
+config:
+  layout: elk
+---
+flowchart TB
+    subgraph FE["clinagenda-frontend · Vue 3 + Vuetify"]
+        PAGES["Pages<br/>doctors · patients<br/>specialties · status"] --> HTTP["httpClient · axios"]
+    end
+    FE -- "http://localhost:5252/api" --> BE
+    subgraph BE["clinagenda-backend · ASP.NET Core 8"]
+        CTRL["WebAPI · Controllers"] --> UC["Application · UseCases"]
+        UC --> REPO["Infrastructure · Repositories<br/>Dapper, SQL by hand"]
+    end
+    BE --> DB[("MySQL 8<br/>Docker Compose · Flyway")]
+
+    style PAGES fill:#FFFFCC,stroke:#333333,color:#000000
+    style HTTP fill:#FFFFCC,stroke:#333333,color:#000000
+    style CTRL fill:#FFFFCC,stroke:#333333,color:#000000
+    style UC fill:#FFFFCC,stroke:#333333,color:#000000
+    style REPO fill:#FFFFCC,stroke:#333333,color:#000000
+    style DB fill:#E8E8E8,stroke:#333333,color:#000000
+    style FE fill:#FFFFFF,stroke:#333333,color:#000000
+    style BE fill:#FFFFFF,stroke:#333333,color:#000000
