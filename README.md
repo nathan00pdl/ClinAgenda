@@ -92,19 +92,6 @@ yarn dev
 
 It opens on `http://localhost:3000`, the origin the API allows in `appsettings.json`. The API address comes from `VITE_BASE_HOST`, in `.env.development`.
 
-## Diagrams
-
-Click a diagram to open it at full size. The diagram is generated from the Mermaid source in `docs/`, so it stays editable text rather than a binary image:
-
-```bash
-for d in docs/*.mmd; do
-  npx @mermaid-js/mermaid-cli -i "$d" -o "${d%.mmd}.svg" -t default -b white -c docs/mermaid-config.json
-  python3 docs/finish-svg.py "${d%.mmd}.svg"
-done
-```
-
-`finish-svg.py` adds a margin around each diagram and gives the arrow labels an opaque background, so the SVG looks the same in any viewer.
-
 ## License
 
 Licensed under the [MIT License](LICENSE).
