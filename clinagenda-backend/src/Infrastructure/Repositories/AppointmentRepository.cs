@@ -80,7 +80,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            String query = "SELECT *, DATE_FORMAT(A.APPOINTMENTDATE, '%d/%m/%Y') AS APPOINTMENTDATE FROM Appointment WHERE Id = @Id;";
+            String query = "SELECT *, DATE_FORMAT(A.APPOINTMENTDATE, '%d/%m/%Y') AS APPOINTMENTDATE FROM Appointment A WHERE A.ID = @Id;";
             var parameters = new { Id = id };
 
             return await connection.QueryFirstOrDefaultAsync<AppointmentDTO>(query, parameters);

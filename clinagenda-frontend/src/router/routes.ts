@@ -31,12 +31,12 @@ export const routes = [
   {
     path: '/specialty/insert',
     name: 'specialty-insert',
-    component: () => import('@/pages/specialty/SecialtyFormPage.vue')
+    component: () => import('@/pages/specialty/SpecialtyFormPage.vue')
   },
   {
     path: '/specialty/update/:id',
     name: 'specialty-update',
-    component: () => import('@/pages/specialty/SecialtyFormPage.vue')
+    component: () => import('@/pages/specialty/SpecialtyFormPage.vue')
   },
 
   // PATIENT

@@ -153,7 +153,7 @@ namespace ClinAgenda.Infrastructure.Repositories
             if (!String.IsNullOrEmpty(name))
             {
                 queryBase.Append(" AND P .NAME LIKE @Name");
-                parameters.Add("Name", $"{name}");
+                parameters.Add("Name", $"%{name}%");
             }
 
             var dataQuery = $@"
